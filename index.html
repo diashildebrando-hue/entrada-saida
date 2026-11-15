@@ -308,17 +308,26 @@ body.cheia #pInfo,body.cheia #pTipo{font-size:clamp(18px,3vw,30px)}
 .bilhete .qr svg{display:block;width:34mm;height:34mm}
 .bilhete .rod{font-size:7.5pt;color:#334155}
 @media(min-width:1024px){ .topo{flex-wrap:nowrap} .topo .escola{flex-basis:auto} }
-.folha.aut{grid-template-columns:186mm;grid-auto-rows:136mm;gap:5mm}
-.termo{border:.3mm dashed #64748b;border-radius:3mm;padding:6mm 8mm;font-family:Arial,Helvetica,sans-serif;color:#000;background:#fff;font-size:10.5pt;line-height:1.4;overflow:hidden;break-inside:avoid}
-.termo h4{margin:0;font-size:13pt;text-align:center}
-.termo .esc{text-align:center;font-size:9.5pt;color:#334155;margin-bottom:3mm}
-.termo p{margin:0 0 3.2mm}
-.termo .peq{font-size:8.5pt;color:#334155}
+.folha.aut{display:block;width:186mm;height:auto;margin:0 auto}
+.termo{border:.3mm solid #64748b;border-radius:3mm;padding:7mm 9mm;font-family:Arial,Helvetica,sans-serif;color:#000;background:#fff;font-size:10.5pt;line-height:1.4;break-inside:avoid}
+.termo h4{margin:0;font-size:14pt;text-align:center}
+.termo .esc{text-align:center;font-size:9.5pt;color:#334155;margin-bottom:4mm}
+.termo p{margin:0 0 2.5mm}
+.termo .al{font-size:11pt;padding:2mm 3mm;background:#f1f5f9;border-radius:2mm}
+.termo .aviso{margin:3mm 0;background:none;border:0;padding:0;color:#000;border-radius:0}
+.termo .aviso strong,.termo .aviso li{color:#000}
+.termo ol{margin:0 0 2.5mm;padding-left:6mm}
+.termo li{margin-bottom:1.5mm}
+.termo .ficha{border:.3mm solid #94a3b8;border-radius:2mm;padding:1mm 4mm 3mm;background:#fff}
+.termo .tit{font-weight:700;font-size:10pt;text-transform:uppercase;letter-spacing:.02em;color:#1f2a44;margin:3mm 0 0;border-bottom:.3mm solid #1f2a44}
+.termo .f{display:flex;flex-wrap:wrap;align-items:flex-end;gap:0 2mm;min-height:9mm;border-bottom:.25mm solid #000;padding-top:2.5mm}
+.termo .f .rot{font-weight:700;white-space:nowrap;color:#000}
+.termo .f .pre{font-size:9pt;color:#334155}
+.termo .f2{display:grid;grid-template-columns:1fr 1fr;gap:0 6mm}
 .termo .cx{display:inline-block;width:3.6mm;height:3.6mm;border:.3mm solid #000;vertical-align:-0.6mm}
-.termo .ln{display:inline-block;border-bottom:.3mm solid #000;width:70mm;height:4mm;vertical-align:bottom}
-.termo .ln.curta{width:36mm}
-.termo .ass{text-align:center;margin:7mm 0 0;font-size:9pt}
-.termo .ass .ln{width:100mm}
+.termo .ln{display:inline-block;border-bottom:.3mm solid #000;width:100mm;height:4mm;vertical-align:bottom}
+.termo .ciente{margin-top:5mm}
+.termo .ass{text-align:center;margin:12mm 0 0;font-size:9pt}
 #pVideo[hidden],#pFotoBtn[hidden],#mfVideo[hidden]{display:none}
 </style>
 </head>
@@ -561,9 +570,9 @@ body.cheia #pInfo,body.cheia #pTipo{font-size:clamp(18px,3vw,30px)}
         <h3 class="sub">Bilhetes para as famílias (Telegram)</h3>
         <p class="dica" id="bilDica"></p>
         <button type="button" class="btn full" id="bilImprimir">Imprimir bilhetes</button>
-        <h3 class="sub">Autorização para envio de mensagens</h3>
-        <p class="dica">Um termo por estudante, já com nome e turma, para o responsável marcar por onde aceita receber os avisos (WhatsApp, Telegram, e-mail), conferir o telefone e assinar. Duas autorizações por folha A4. Vale a turma e o estudante escolhidos acima.</p>
-        <button type="button" class="btn full" id="autImprimir">Imprimir autorizações</button>
+        <h3 class="sub">Ficha de contato e aviso de mensagens</h3>
+        <p class="dica">Uma ficha por estudante (uma folha A4), já com nome, turma e o contato que temos hoje. Avisa a família que as mensagens chegam primeiro pelo Telegram, depois WhatsApp e e-mail, e traz espaço para atualizar celular, e-mail do responsável, outro responsável e telefone para recado. Vale a turma e o estudante escolhidos acima.</p>
+        <button type="button" class="btn full" id="autImprimir">Imprimir fichas de contato</button>
         <div class="msg" id="craMsg"></div>
         <div class="erro" id="craErro"></div>
       </div>
@@ -3004,29 +3013,48 @@ const PORTAO = (() => {
   });
   function htmlAutorizacoes(L){
     const esc_ = escola || "Escola";
-    const linha = '<span class="ln"></span>';
-    const termo = x => `<div class="termo">
-      <h4>Autorização para envio de mensagens</h4>
+    const cx = '<span class="cx"></span>';
+    const campo = (rot, pre) => `<div class="f"><span class="rot">${rot}</span>${pre ? `<span class="pre">Hoje temos: ${pre} · se mudou, escreva o novo:</span>` : ""}</div>`;
+    const termo = x => {
+      const resp = x.a.resp ? String(x.a.resp) : "";
+      const tel = x.a.tel ? esc(formataTel(x.a.tel)) : "";
+      return `<div class="termo">
+      <h4>Ficha de contato da família e aviso sobre mensagens</h4>
       <div class="esc">${esc(esc_)}</div>
-      <p><strong>Estudante:</strong> ${esc(x.a.nome)} &nbsp;·&nbsp; <strong>Turma:</strong> ${esc(x.turma)}${x.a.turno ? " &nbsp;·&nbsp; <strong>Turno:</strong> " + esc(x.a.turno) : ""}</p>
-      <p>Eu, responsável pelo(a) estudante acima, <strong>autorizo</strong> a escola a me enviar mensagens sobre a <strong>entrada e a saída</strong> do(a) estudante e outros avisos da vida escolar dele(a), pelos meios que marquei:</p>
-      <p class="ops"><span class="cx"></span> WhatsApp &nbsp;&nbsp; <span class="cx"></span> Telegram &nbsp;&nbsp; <span class="cx"></span> E-mail</p>
-      <p><strong>Celular (com DDD):</strong> ${x.a.tel ? esc(formataTel(x.a.tel)) + " &nbsp; Se mudou, escreva o novo: " : ""}${linha}</p>
-      <p><strong>E-mail:</strong> ${linha}</p>
-      <p class="peq">A escola usa esses contatos somente para falar com a família sobre o(a) estudante. Eles não são repassados a outras pessoas. Posso cancelar esta autorização quando quiser, avisando a secretaria.</p>
-      <p><strong>Nome do responsável:</strong> ${linha}</p>
-      <p><strong>Parentesco:</strong> <span class="ln curta"></span> &nbsp; <strong>Data:</strong> ____/____/______</p>
+      <p class="al"><strong>Estudante:</strong> ${esc(x.a.nome)} &nbsp;·&nbsp; <strong>Turma:</strong> ${esc(x.turma)}${x.a.turno ? " &nbsp;·&nbsp; <strong>Turno:</strong> " + esc(x.a.turno) : ""}</p>
+      <div class="aviso">
+        <p>Querida família: a escola vai avisar vocês, pelo celular, quando o(a) estudante <strong>entrar</strong> e <strong>sair</strong> do colégio, e também mandar recados da vida escolar. Os avisos chegam por <strong>três caminhos</strong>:</p>
+        <ol>
+          <li><strong>Telegram — o caminho principal.</strong> É por ele que o aviso chega primeiro, na hora. É gratuito. Se ainda não tem, instale o Telegram no celular. A escola vai entregar um bilhete com um código: é só apontar a câmera do celular e tocar em <em>Iniciar</em>.</li>
+          <li><strong>WhatsApp</strong> — para recados e quando precisarmos conversar com vocês.</li>
+          <li><strong>E-mail</strong> — para comunicados e documentos.</li>
+        </ol>
+        <p>Por isso, pedimos que confiram e atualizem os contatos abaixo. Usamos esses dados só para falar com a família sobre o(a) estudante e não repassamos a ninguém.</p>
+      </div>
+      <div class="ficha">
+        <div class="tit">Responsável principal</div>
+        ${resp ? `<div class="f"><span class="rot">Nome:</span><span class="pre">Hoje temos: ${esc(resp)} &nbsp; ${cx} está certo &nbsp; ${cx} é outra pessoa (escreva abaixo)</span></div>${campo("Nome do responsável (se for outra pessoa):")}` : campo("Nome:")}
+        ${campo("Parentesco:")}
+        ${tel ? `<div class="f"><span class="rot">Celular / WhatsApp (com DDD):</span><span class="pre">Hoje temos: ${tel} &nbsp; ${cx} está certo &nbsp; ${cx} mudou (escreva abaixo)</span></div>${campo("Novo celular / WhatsApp (se mudou):")}` : campo("Celular / WhatsApp (com DDD):")}
+        <div class="f"><span class="rot">Tem Telegram neste celular?</span>&nbsp; ${cx} Sim &nbsp; ${cx} Ainda não, vou instalar</div>
+        ${campo("E-mail do responsável:")}
+        <div class="tit">Outro responsável (se tiver)</div>
+        <div class="f2">${campo("Nome:")}${campo("Parentesco:")}</div>
+        <div class="f2">${campo("Celular (com DDD):")}${campo("E-mail:")}</div>
+        <div class="tit">Telefone para recado</div>
+        <div class="f2">${campo("Telefone (com DDD):")}${campo("Falar com:")}</div>
+      </div>
+      <p class="ciente">Li o aviso e estou de acordo em receber as mensagens da escola. &nbsp; Data: ____/____/______</p>
       <p class="ass"><span class="ln"></span><br>Assinatura do responsável</p>
     </div>`;
-    let h = "";
-    for (let i = 0; i < L.length; i += 2) h += `<div class="folha aut">${L.slice(i, i + 2).map(termo).join("")}</div>`;
-    return h;
+    };
+    return L.map(x => `<div class="folha aut">${termo(x)}</div>`).join("");
   }
   $("autImprimir").addEventListener("click", () => {
     $("craErro").style.display = "none";
     const L = selecionados();
     if (!L.length) { mostra($("craErro"), "Nenhum estudante para imprimir com essa escolha.", 5000); return; }
-    mostra($("craMsg"), `Montando ${L.length} autorização(ões) em ${Math.ceil(L.length / 2)} folha(s)…`, 4000);
+    mostra($("craMsg"), `Montando ${L.length} ficha(s) de contato, uma por folha…`, 4000);
     imprime(htmlAutorizacoes(L));
   });
   $("logoArq").addEventListener("change", e => {
