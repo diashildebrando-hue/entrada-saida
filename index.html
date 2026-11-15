@@ -477,6 +477,59 @@ tr.cor .muted,table.resp tr.cor td::before{color:#4b5563}
 /* aviso de alterações ainda não salvas */
 .pend{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;background:#fff7ed;border:1px solid #c2560c;color:#7c2d12;border-radius:10px;padding:8px 12px;margin:0 0 10px;font-size:14px}
 .pend[hidden]{display:none}
+
+/* ===== Registrar e Portão juntos (15/11) ===== */
+.hojeAl{margin-top:6px;padding-top:6px;border-top:1px dashed #cbd5e1;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.hjItem{white-space:nowrap}
+.hjItem.int{opacity:.75}
+.hjEst{font-size:13px;border-radius:99px;padding:1px 10px;background:#fee2e2;color:#991b1b}
+.hjEst.dentro{background:#dcfce7;color:#14532d}
+.hjEst.fora{background:#e2e8f0;color:#334155}
+
+/* motivos: marcar os que são de entrar/sair da escola */
+.listaMot li{flex-wrap:wrap}
+.motConta{display:inline-flex;align-items:center;gap:6px;margin:0 8px 0 auto;font-weight:500;font-size:14px;color:var(--txt);white-space:nowrap;cursor:pointer}
+.motConta input{width:18px;height:18px;margin:0}
+@media(max-width:599px){ .listaMot li > span:first-child{flex:1 1 100%} .motConta{margin-left:0} }
+
+/* ===== chamada das atividades (15/11) ===== */
+.stt.esc{background:#e0f2fe;color:#075985}
+.pNumeros .ste strong{color:#075985}
+@media(min-width:600px){ .pNumeros.pNum5{grid-template-columns:repeat(5,minmax(0,1fr))} }
+.pcTopo .btn{margin:0 0 0 auto;flex:0 0 auto;white-space:nowrap}
+.paiChamada{border:1px solid #d6dbe3;border-left:6px solid var(--ac,#475569);border-radius:12px;padding:0 12px 12px;margin-top:12px;background:#fff}
+.paiChamada[hidden]{display:none}
+.paiChamada .pcTopo{display:flex;gap:10px;align-items:center;margin:0 -12px 10px;padding:10px 12px;background:var(--af,#eef2f6);border-radius:0 11px 0 0}
+.paiChamada .pcTopo .muted{font-size:13px}
+#chMsg{margin:4px 0 0}
+#chMsg.bom{color:#14532d;font-weight:600}
+#chMsg.ruim{color:#991b1b;font-weight:600}
+.chConta{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;margin:10px 0 4px;font-size:13px}
+.chLista{list-style:none;margin:0;padding:0}
+.chLista li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #eef2f6}
+.chNome{display:flex;flex-direction:column;min-width:0}
+.chNome strong{overflow-wrap:anywhere;line-height:1.2}
+.chNome .muted{font-size:13px}
+.chBts{display:flex;gap:6px}
+.chB{font:inherit;font-size:14px;font-weight:600;min-height:44px;padding:8px 12px;border-radius:10px;border:2px solid #cbd5e1;background:#fff;color:#334155;cursor:pointer;white-space:nowrap}
+.chB.p.on{background:#15803d;border-color:#15803d;color:#fff}
+.chB.a.on{background:#b91c1c;border-color:#b91c1c;color:#fff}
+.chB:focus-visible{outline:3px solid #1e40af;outline-offset:2px}
+@media(max-width:480px){ .chLista li{grid-template-columns:minmax(0,1fr)} .chBts{display:grid;grid-template-columns:1fr 1fr} }
+@media print{ .chB{border-width:1px;min-height:0;padding:2px 8px;font-size:11px} .chB.on{-webkit-print-color-adjust:exact;print-color-adjust:exact} .chB:not(.on){display:none} }
+/* botão "Fazer chamada": fica na linha de baixo do cabeçalho do cartão, ocupando a largura (alvo de toque grande, título inteiro) */
+.paiCard .pcTopo{flex-wrap:wrap}
+.paiCard .pcTopo > div{flex:1 1 0;min-width:0}
+.paiCard .pcTopo .btn{flex:1 1 100%;width:auto;margin:6px 0 0;padding:9px 14px;font-size:15px;min-height:44px}
+@media(max-width:599px){ .pNumeros.pNum5 > div:first-child{grid-column:1 / -1} }
+
+/* ===== lembrete da cópia de segurança (modo local) ===== */
+.lembrete{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;background:#fff7ed;border:1px solid #c2560c;color:#7c2d12;border-radius:12px;padding:10px 12px;margin:0 0 12px;font-size:14px;line-height:1.35}
+.lembrete[hidden],.lembrete .lbBts[hidden]{display:none}
+.lembrete > span:first-child{flex:1 1 260px;min-width:0}
+.lembrete .lbBts{display:flex;gap:8px;flex-wrap:wrap}
+.lembrete .btn{margin:0;width:auto;padding:8px 12px;font-size:14px;min-height:40px;background:#fff;border:1px solid #c2560c;color:#7c2d12}
+.lembrete .btn.lbP{background:#c2560c;color:#fff;font-weight:600}
 </style>
 </head>
 <body>
@@ -496,6 +549,13 @@ tr.cor .muted,table.resp tr.cor td::before{color:#4b5563}
 
 <main>
   <div class="soImp" id="cabImp"></div>
+  <div class="lembrete noprint" id="lembreteCopia" role="status" hidden>
+    <span id="lembreteTxt"></span>
+    <span class="lbBts" id="lembreteBts">
+      <button type="button" class="btn lbP" id="lembreteBaixar">Baixar cópia agora</button>
+      <button type="button" class="btn" id="lembreteDepois">Lembrar amanhã</button>
+    </span>
+  </div>
   <!-- LISTA DA ESCOLA PROTEGIDA POR SENHA (só na versão do endereço https) -->
   <div class="card noprint" id="cardCofre" hidden style="margin-bottom:16px;border-color:#1e3a8a">
     <h2 id="cofreTit">Carregar a lista de alunos da escola</h2>
@@ -681,8 +741,12 @@ tr.cor .muted,table.resp tr.cor td::before{color:#4b5563}
       <div><label for="relFim">Até</label><input type="date" id="relFim"></div>
       <div><label for="relTurma">Turma</label><select id="relTurma"></select></div>
       <div><label for="relAluno">Aluno</label><select id="relAluno"></select></div>
+      <div><label for="relOrigem">Mostrar</label><select id="relOrigem">
+        <option value="">Tudo (crachá e registros com motivo)</option>
+        <option value="motivo">Só registros com motivo</option>
+        <option value="cracha">Só leituras do crachá</option></select></div>
     </div>
-    <p class="dica"><strong>Turma:</strong> mostra o que aconteceu naquela turma. <strong>Aluno:</strong> mostra tudo do aluno, em qualquer turma — se ele mudou de turma, o histórico vem junto. Dá para escolher o aluno sem escolher a turma.</p>
+    <p class="dica">O relatório junta as <strong>leituras do crachá</strong> (Portão) e os <strong>registros com motivo</strong> (Registrar e registros manuais do portão). <strong>Turma:</strong> mostra o que aconteceu naquela turma. <strong>Aluno:</strong> mostra tudo do aluno, em qualquer turma — se ele mudou de turma, o histórico vem junto. Dá para escolher o aluno sem escolher a turma.</p>
     <div class="msg" id="msgRel"></div>
     <div class="resumo" style="margin-top:16px">
       <span class="muted" id="resRel"></span>
@@ -697,7 +761,7 @@ tr.cor .muted,table.resp tr.cor td::before{color:#4b5563}
       <div class="ficha" id="fichaRel" style="margin-top:16px"></div>
       <h2 style="margin:20px 0 8px">Registros do aluno (todas as turmas)</h2>
       <div class="wrap"><table class="resp">
-        <thead><tr><th>Data</th><th>Hora</th><th>Turma</th><th>Tipo</th><th>Motivo</th><th class="noprint"></th></tr></thead>
+        <thead><tr><th>Data</th><th>Hora</th><th>Turma</th><th>Tipo</th><th>Motivo / como foi</th><th class="noprint"></th></tr></thead>
         <tbody id="corpoDet"></tbody>
       </table></div>
     </div>
@@ -730,7 +794,7 @@ tr.cor .muted,table.resp tr.cor td::before{color:#4b5563}
         <div><label for="preTurma">Turma</label><select id="preTurma"></select></div>
         <div><label for="preVer">Mostrar</label><select id="preVer">
           <option value="nao">Quem não entrou</option><option value="sim">Quem entrou</option>
-          <option value="semsaida">Com um registro só</option><option value="fora">Fora do horário da turma</option><option value="ativ">Em atividade (monitoria, reforço…)</option><option value="todos">Todos</option></select></div>
+          <option value="semsaida">Falta entrada ou saída</option><option value="fora">Fora do horário da turma</option><option value="ativ">Em atividade (monitoria, reforço…)</option><option value="todos">Todos</option></select></div>
       </div>
       <div class="pNumeros" id="preNumeros"></div>
       <p class="dica" id="preDica"></p>
@@ -761,15 +825,37 @@ tr.cor .muted,table.resp tr.cor td::before{color:#4b5563}
     <div class="card" id="p-pai" hidden>
       <h2>Painel das atividades</h2>
       <p class="soImp" id="paiCabImp"></p>
-      <p class="muted" style="margin:0 0 8px">Quem está em cada atividade (monitoria, reforço…), em que horário e local, e se já passou pelo portão.</p>
+      <p class="muted" style="margin:0 0 8px">Quem está em cada atividade (monitoria, reforço…), em que horário e local, e se está presente.</p>
       <div class="filtros" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
         <div><label for="paiDia">Dia</label><input type="date" id="paiDia"></div>
         <div><label for="paiTipo">Tipo</label><select id="paiTipo"></select></div>
       </div>
-      <div class="pNumeros" id="paiNum"></div>
-      <div class="paiLeg" id="paiLeg"></div>
-      <div class="paiMatriz" id="paiMatriz" aria-hidden="true"></div>
-      <div class="paiCards" id="paiCards"></div>
+      <div id="paiVisao">
+        <div class="pNumeros pNum5" id="paiNum"></div>
+        <div class="paiLeg" id="paiLeg"></div>
+        <div class="paiMatriz" id="paiMatriz" aria-hidden="true"></div>
+        <div class="paiCards" id="paiCards"></div>
+        <p class="dica noprint">Em <strong>Fazer chamada</strong> você marca quem está na atividade, com um toque ou com o crachá. Sem chamada, o painel mostra o que o portão registrou.</p>
+        <div class="acoes noprint">
+          <button type="button" class="btn" id="paiCsv">Baixar planilha (CSV)</button>
+          <button type="button" class="btn" id="paiImprimir">Imprimir / salvar PDF</button>
+        </div>
+      </div>
+      <!-- chamada de uma atividade (aparece no lugar do painel) -->
+      <div class="paiChamada" id="paiChamada" hidden>
+        <div class="pcTopo" id="chTopo"></div>
+        <div class="regCracha noprint">
+          <div><label for="chCod">Crachá <span style="font-weight:400">(leitor, CGM ou câmera)</span></label>
+            <input id="chCod" autocomplete="off" inputmode="numeric" placeholder="Passe o crachá ou digite o CGM e Enter"></div>
+          <button type="button" class="btn" id="chCam">Câmera</button>
+        </div>
+        <p class="dica" id="chMsg" aria-live="polite"></p>
+        <div id="chCamBox"></div>
+        <div class="chConta" id="chConta"></div>
+        <ul class="chLista" id="chLista"></ul>
+        <p class="dica noprint">Toque em <strong>Presente</strong> ou <strong>Ausente</strong>. Tocar de novo tira a marca (volta a valer o que o portão registrou).</p>
+        <button type="button" class="btn pri full noprint" id="chFim">Concluir a chamada</button>
+      </div>
       <div class="erro" id="paiErro"></div>
     </div>
   </section>
@@ -796,6 +882,7 @@ tr.cor .muted,table.resp tr.cor td::before{color:#4b5563}
     <div class="card">
       <h2>Motivos</h2>
       <p class="muted" style="margin:0 0 8px">Estes motivos aparecem na lista do registro. "Outro" fica sempre no fim, para o que não estiver aqui. Excluir um motivo não muda os registros já feitos.</p>
+      <p class="muted" style="margin:0 0 8px"><strong>Entra/sai da escola:</strong> deixe marcado nos motivos em que o estudante entra ou sai do colégio (Atraso, Retirada antecipada…). Esses registros contam na presença, junto com o crachá. Os desmarcados são saídas da sala (Banheiro, Bebedouro…): ficam no relatório, mas não mexem na presença.</p>
       <div class="inline">
         <input id="novoMotivo" placeholder="Novo motivo (ex.: Secretaria)" maxlength="60">
         <button type="button" class="btn" id="addMotivo">Adicionar</button>
@@ -836,6 +923,7 @@ tr.cor .muted,table.resp tr.cor td::before{color:#4b5563}
       <input type="file" id="arquivoBackup" accept=".json" hidden>
       <button type="button" class="btn full danger" id="confirmarBackup" hidden></button>
       <button type="button" class="btn full danger" id="zerarDados">Apagar todos os dados deste aparelho</button>
+      <p class="dica" id="ultimaCopia" style="margin:10px 0 0"></p>
       <div class="msg" id="msgBackup"></div>
       <div class="erro" id="erroBackup"></div>
     </div>
@@ -1064,7 +1152,7 @@ const MODO_LOCAL = (typeof google === "undefined" || !google.script);
 const ROSTER = {};
 const ROSTER_VERSAO = "2026-11-12-sere-portao";   // mude quando a lista embutida for atualizada
 
-const LK = {regs: "eg_v3_regs", alunos: "eg_v3_alunos", hist: "eg_v3_hist", motivos: "eg_v3_motivos", versao: "eg_v3_roster_versao", assin: "eg_v3_assin", config: "eg_v3_config", portao: "eg_v3_portao_pref", fts: "eg_v3_fotots", fpend: "eg_v3_fotopend"};
+const LK = {regs: "eg_v3_regs", alunos: "eg_v3_alunos", hist: "eg_v3_hist", motivos: "eg_v3_motivos", versao: "eg_v3_roster_versao", assin: "eg_v3_assin", config: "eg_v3_config", portao: "eg_v3_portao_pref", fts: "eg_v3_fotots", fpend: "eg_v3_fotopend", cpend: "eg_v3_champend", copia: "eg_v3_copia"};
 function lsLer(k, padrao){
   try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : padrao; } catch (e) { return padrao; }
 }
@@ -1318,13 +1406,16 @@ function pede(nome, args, onOk, onErro){
 function aplicaDados(d){
   if (d && d.alunos) alunos = d.alunos;      // a versão Google só manda a lista quando ela muda
   regs = (d && d.regs) || [];
+  if (d && Array.isArray(d.motivos)) motivos = d.motivos;
+  PORTAO.aoRegs();                           // registros e motivos novos: a conta do dia é refeita
   recalculaTurmas();
   if (d && d.alunos) PORTAO.indexa();
   if (d && d.config) { escola = d.config.escola || ""; mostraEscola(); PORTAO.config(d.config); }
-  if (d) { PORTAO.versoes(d.va, d.vf); PORTAO.aplicaPass(d.pass); PORTAO.sincFotos(d.fotos); }
+  if (d) { PORTAO.versoes(d.va, d.vf); PORTAO.aplicaPass(d.pass); PORTAO.aplicaCham(d.cham); PORTAO.sincFotos(d.fotos); }
   hist = (d && d.hist) || [];
   usuario = (d && d.usuario) || usuario;
-  if (d && Array.isArray(d.motivos)) { motivos = d.motivos; preencheMotivos(); }
+  if (d && Array.isArray(d.motivos)) preencheMotivos();
+  if (!carregado) setTimeout(confereCopia, 600);      // lembrete da cópia de segurança: confere ao abrir o app
   carregado = true;
   if (typeof COFRE !== "undefined" && COFRE) COFRE.verifica();
   $("boasVindas").hidden = TURMAS.length > 0;
@@ -1411,6 +1502,7 @@ function preencheMotivos(){
   $("edMotivos").innerHTML = motivos.map(m => `<option value="${esc(m)}">`).join("");
   $("listaMotivos").innerHTML = motivos.map((m, i) => `
     <li><span>${esc(m)}</span>
+      <label class="motConta"><input type="checkbox" data-motconta="${i}"${PORTAO.motivoInterno(m) ? "" : " checked"}> entra/sai da escola</label>
       <button type="button" class="btn sm danger" data-mot="${i}">${motivoParaExcluir === m ? "Confirmar exclusão?" : "Excluir"}</button></li>`).join("") +
     '<li class="fixo"><span>Outro (digitar o motivo)</span><span class="dica" style="margin:0">fixo</span></li>';
 }
@@ -1426,7 +1518,22 @@ $("addMotivo").addEventListener("click", () => {
   if (m.toLowerCase() === "outro") { mostra($("erroMot"), "\"Outro\" já existe e fica sempre no fim da lista."); return; }
   if (motivos.some(x => x.toLowerCase() === m.toLowerCase())) { mostra($("erroMot"), "Esse motivo já está na lista."); return; }
   $("novoMotivo").value = "";
-  gravaMotivos(motivos.concat([m]), `Motivo "${m}" adicionado.`);
+  // motivo novo com cara de "dentro da escola" (banheiro, secretaria…) já entra desmarcado
+  const marcados = PORTAO._cfg().motInt;
+  const depois = Array.isArray(marcados) && PORTAO.internoPadrao(m) && !marcados.includes(normTxt(m)) ? marcados.concat([normTxt(m)]) : null;
+  $("erroMot").style.display = "none";
+  chama("salvarMotivos", [motivos.concat([m])], () => {
+    mostra($("msgMot"), `Motivo "${m}" adicionado.`, 3000);
+    if (depois) chama("salvarConfig", [{motInt: depois}], null, null);
+  }, err => mostra($("erroMot"), "Não foi salvo. " + msgErro(err)));
+});
+/** Marcar/desmarcar "entra/sai da escola": guarda a lista dos motivos que são de dentro da escola (os desmarcados). */
+$("listaMotivos").addEventListener("change", e => {
+  if (!e.target.closest("[data-motconta]")) return;
+  const motInt = [...$("listaMotivos").querySelectorAll("[data-motconta]")].filter(x => !x.checked).map(x => normTxt(motivos[Number(x.dataset.motconta)]));
+  $("erroMot").style.display = "none";
+  chama("salvarConfig", [{motInt}], () => { mostra($("msgMot"), "Salvo. A presença já segue essa marcação.", 3000); renderUltimos(); },
+    err => mostra($("erroMot"), "Não foi salvo. " + msgErro(err)));
 });
 $("novoMotivo").addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); $("addMotivo").click(); } });
 $("listaMotivos").addEventListener("click", e => {
@@ -1481,15 +1588,11 @@ function atualizaListaAlunos(manter){
 function renderUltimos(){
   const hoje = hojeISO();
   const L = regs.filter(r => r.data === hoje).sort((a,b) => b.hora.localeCompare(a.hora));
-  const conta = {};
-  L.forEach(r => { const k = chave(r.nome); conta[k] = (conta[k] || 0) + 1; });
-  (PORTAO._P.hoje || []).forEach(p => { const k = chave(p.nome || ""); if (k in conta) conta[k]++; });
-  const ultimoDe = {};
-  L.forEach(r => { const k = chave(r.nome); if (!ultimoDe[k]) ultimoDe[k] = r.id; });
+  const ab = PORTAO.abertosHoje();          // contorno vermelho: vale o dia inteiro do estudante (portão + Registrar)
   const corReg = r => {
     const a = alunoCad(r.turma, r.nome);
-    const c = PORTAO.classifica({cod: a && a.cod, turma: r.turma, hora: r.hora, data: r.data, via: "manual"});
-    return "cor " + c.cls + (conta[chave(r.nome)] % 2 && ultimoDe[chave(r.nome)] === r.id ? " so" : "");
+    const c = PORTAO.classifica({cod: a && a.cod, turma: r.turma, hora: r.hora, data: r.data, via: "registrar"});
+    return "cor " + c.cls + (ab.has("r:" + r.id) ? " so" : "");
   };
   $("legReg").innerHTML = PORTAO.legendaHTML();
   $("ultimos").innerHTML = L.length ? L.map(r => `
@@ -1582,7 +1685,7 @@ function preencheTel(){
   $("telAluno").value = formataTel(tel);
   telEditado = false;
   const cad = turma && nome ? alunoCad(turma, nome) : null;
-  $("fichaAluno").innerHTML = fichaHTML(cad, true);
+  $("fichaAluno").innerHTML = fichaHTML(cad, true) + PORTAO.linhaDoDia(cad, turma);
   $("fichaAluno").hidden = !$("fichaAluno").innerHTML;
   $("dicaTel").textContent = !nome ? "" : tel
     ? "Telefone do cadastro. Se mudou, corrija aqui: fica salvo."
@@ -1711,6 +1814,7 @@ function mostraAba(id){
   if (id === "t-reg") { renderUltimos(); ajustaCanvas(); }
   if (SUBS[id]) mostraSub(SUBS[id].find(x => !$(x).hidden) || SUBS[id][0]);
   if (id === "t-por") PORTAO.aoMostrar(); else PORTAO.aoSair(id);
+  confereCopia();
 }
 
 function travaSalvar(ligado){
@@ -1921,15 +2025,33 @@ function preencheRelAluno(){
   if (anterior && lista.some(a => a.k === anterior)) sel.value = anterior;
 }
 
+const NOME_ORIGEM = {cracha: "Crachá", manual: "Manual (portão)", registrar: "Registrar"};
+let seqRel = 0, passRel = new Map();   // leituras do portão que estão no relatório (por id), para poder excluir
+/** Busca as leituras do portão do período e monta o relatório junto com os registros do Registrar. */
 function atualizaRelatorio(silencioso){
+  const di = $("relIni").value, df = $("relFim").value || hojeISO();
+  const meu = ++seqRel;
+  const segue = ps => { if (meu === seqRel) desenhaRelatorio(silencioso, ps || []); };
+  // sem data de início, as leituras do crachá vêm dos últimos 3 meses (os registros com motivo vêm todos)
+  PORTAO.passIntervalo(di || isoMais(hojeISO(), -92), df).then(segue, () => segue([]));
+}
+function desenhaRelatorio(silencioso, ps){
   const di = $("relIni").value, df = $("relFim").value;
   const t = $("relTurma").value;
   const a = $("relAluno").value;          // chave do aluno escolhido
+  const origem = $("relOrigem").value;    // "" tudo · "motivo" · "cracha"
   const noPeriodo = d => (!di || d >= di) && (!df || d <= df);
+  passRel = new Map(ps.map(p => [p.id, p]));
+  const doPortao = ps.map(p => {
+    const x = PORTAO.acha(p.cod);
+    return {id: "p:" + p.id, pass: p, cod: p.cod, data: p.data, hora: p.hora, turma: p.turma || (x ? x.turma : ""), numero: x ? x.a.n : null,
+      nome: p.nome || (x ? x.a.nome : "Código " + p.cod), tipo: p.tipo, motivo: p.motivo || "", origem: p.via === "manual" ? "manual" : "cracha"};
+  });
   // Aluno escolhido: todos os registros dele, em qualquer turma (não se perde se mudou de turma).
   // Só turma: os registros feitos naquela turma.
-  const L = regs
-    .filter(r => noPeriodo(r.data) && (a ? chave(r.nome) === a : (!t || r.turma === t)))
+  const L = regs.map(r => Object.assign({origem: "registrar"}, r)).concat(doPortao)
+    .filter(r => noPeriodo(r.data) && (a ? chave(r.nome) === a : (!t || r.turma === t)) &&
+      (!origem || (origem === "cracha" ? r.origem === "cracha" : r.origem !== "cracha")))
     .sort((x,y) => (x.data + x.hora).localeCompare(y.data + y.hora));
   const cad = cadastroPorChave();
 
@@ -1945,7 +2067,8 @@ function atualizaRelatorio(silencioso){
     const m = mapa[k];
     if (!m.turmas.includes(r.turma)) m.turmas.push(r.turma);
     if (r.tipo === "entrada") m.entradas++; else m.saidas++;
-    m.motivos[r.motivo] = (m.motivos[r.motivo] || 0) + 1;
+    const mot = r.motivo || "Crachá";
+    m.motivos[mot] = (m.motivos[mot] || 0) + 1;
   });
   const ordem = TURMAS.concat([""]);
   const turmaRef = x => x.turmaAtual || x.turmas[x.turmas.length - 1] || "";
@@ -1974,16 +2097,18 @@ function atualizaRelatorio(silencioso){
   // registros individuais (quando um aluno está escolhido)
   ultimoDetalhe = L;
   $("detalheBox").hidden = !a;
+  let cadA = null;
   if (a) {
-    let cadA = null;
     for (const t of TURMAS) { cadA = (alunos[t] || []).find(x => chave(x.nome) === a); if (cadA) break; }
     $("fichaRel").innerHTML = fichaHTML(cadA, false) || '<span class="muted">Sem dados de contato no cadastro.</span>';
   }
   if (a) {
+    const cor = r => "cor " + PORTAO.classifica({cod: r.cod || (cadA && cadA.cod), turma: r.turma, hora: r.hora, data: r.data, via: r.origem === "cracha" ? "cracha" : "manual"}).cls;
     $("corpoDet").innerHTML = L.length ? L.slice().reverse().map(r => `
-      <tr><td>${fmtData(r.data)}</td><td>${esc(r.hora)}</td><td>${esc(r.turma)}</td>
+      <tr class="${cor(r)}"><td>${fmtData(r.data)}</td><td>${esc(r.hora)}</td><td>${esc(r.turma)}</td>
       <td><span class="tag ${r.tipo}">${r.tipo === "entrada" ? "Entrada" : "Saída"}</span></td>
-      <td>${esc(r.motivo)}</td>${botoesReg(r)}</tr>`).join("")
+      <td>${esc(r.motivo || "Leitura do crachá")} <span class="como">${esc(NOME_ORIGEM[r.origem].toLowerCase())}</span></td>${r.pass
+        ? `<td class="noprint"><div class="acoesReg"><button type="button" class="btn sm danger" data-excluirpass="${esc(r.pass.id)}">Excluir</button></div></td>` : botoesReg(r)}</tr>`).join("")
       : '<tr><td colspan="6" class="muted">Nenhum registro no período.</td></tr>';
   }
 
@@ -2046,6 +2171,12 @@ document.addEventListener("click", e => {
   const r = regs.find(x => x.id === id);
   if (r) abreModal(b.dataset.editar ? "editar" : "excluir", r);
 });
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-excluirpass]");
+  if (!b) return;
+  const p = passRel.get(b.dataset.excluirpass);
+  if (p) PORTAO.pedeExcluir(p);
+});
 $("edTurma").addEventListener("change", preencheNomesEdicao);
 $("modalCancelar").addEventListener("click", fechaModal);
 $("modal").addEventListener("click", e => { if (e.target === $("modal")) fechaModal(); });
@@ -2094,11 +2225,12 @@ $("relIni").addEventListener("change", () => atualizaRelatorio(false));
 $("relFim").addEventListener("change", () => atualizaRelatorio(false));
 $("relTurma").addEventListener("change", () => { preencheRelAluno(); atualizaRelatorio(false); });
 $("relAluno").addEventListener("change", () => atualizaRelatorio(false));
+$("relOrigem").addEventListener("change", () => atualizaRelatorio(false));
 
 $("expRel").addEventListener("click", () => {
-  const linhas = [["Data","Hora","Turma","Nº","Aluno","Tipo","Motivo","Assinado"]].concat(
+  const linhas = [["Data","Hora","Turma","Nº","Aluno","Tipo","Motivo","Como foi","Assinado"]].concat(
     ultimoDetalhe.map(r => [fmtData(r.data), r.hora, r.turma, r.numero ?? "", r.nome,
-      r.tipo === "entrada" ? "Entrada" : "Saída", r.motivo, r.assinado ? "Sim" : "Não"]));
+      r.tipo === "entrada" ? "Entrada" : "Saída", r.motivo, NOME_ORIGEM[r.origem] || "", r.assinado ? "Sim" : "Não"]));
   baixaCSV(`registros-${hojeISO()}.csv`, linhas);
 });
 $("imprimir").addEventListener("click", () => window.print());
@@ -2449,7 +2581,7 @@ function desenhaGraficos(L, t, a, di, df){
     {id: "gHora", titulo: "Registros por horário"},
     {id: "gMot", titulo: "Por motivo"},
   ];
-  if (!a) cards.push(t ? {id: "gAlu", titulo: "Alunos com mais registros na turma"} : {id: "gTur", titulo: "Por turma"});
+  if (!a) cards.push(t ? {id: "gAlu", titulo: "Alunos com mais registros com motivo na turma"} : {id: "gTur", titulo: "Registros com motivo, por turma"});
   box.innerHTML = cards.map(c => `
     <figure class="grafico">
       <figcaption>${c.titulo}</figcaption>
@@ -2485,12 +2617,14 @@ function desenhaGraficos(L, t, a, di, df){
     i => `Das ${hs[i]}h às ${hs[i]}h59 · ${porHora[i]} registro(s)`);
 
   // por motivo
-  const conta = f => { const m = {}; L.forEach(r => { const k = f(r); m[k] = (m[k] || 0) + 1; }); return Object.entries(m).map(([rotulo, valor]) => ({rotulo, valor})); };
-  graficoBarras($("gMot"), conta(r => r.motivo));
-  if ($("gTur")) graficoBarras($("gTur"), conta(r => r.turma));
+  const Lm = L.filter(r => r.motivo);      // só os que têm motivo (Registrar e manuais do portão)
+  const conta = f => { const m = {}; Lm.forEach(r => { const k = f(r); m[k] = (m[k] || 0) + 1; }); return Object.entries(m).map(([rotulo, valor]) => ({rotulo, valor})); };
+  const semMotivo = '<p class="muted" style="margin:8px 0">Sem registros com motivo neste período.</p>';
+  if (Lm.length) graficoBarras($("gMot"), conta(r => r.motivo)); else $("gMot").innerHTML = semMotivo;
+  if ($("gTur")) { if (Lm.length) graficoBarras($("gTur"), conta(r => r.turma)); else $("gTur").innerHTML = semMotivo; }
   if ($("gAlu")) {
     const cad = cadastroPorChave();
-    graficoBarras($("gAlu"), conta(r => { const c = cad.get(chave(r.nome)); return c ? c.nome : r.nome; }));
+    if (Lm.length) graficoBarras($("gAlu"), conta(r => { const c = cad.get(chave(r.nome)); return c ? c.nome : r.nome; })); else $("gAlu").innerHTML = semMotivo;
   }
 }
 
@@ -2543,30 +2677,30 @@ function nomeEscolaHTML(nome, curta){
   return esc(t).replace(/29\s+de\s+abril/i, '<span class="nb">29 De Abril</span>');
 }
 const REPETE_MIN = 5;       // o mesmo crachá lido de novo em menos de 5 minutos não é gravado (evita entrada e saída sem querer)
+const JANELA_REG = 30;      // crachá lido a menos de 30 min de um registro do Registrar: é o mesmo registro (não grava de novo)
 const LIMITE_LINHAS = 150;
 const POR_FOLHA = 9;        // crachás em pé: 3 × 3 por folha A4  // linhas mostradas de cada vez na Presença
 
-/** Guarda grande deste aparelho (leituras, fila de envio e fotos). Se o navegador bloquear, fica só na memória. */
-const BD = (() => {
-  const NOME = LK.regs.replace(/regs$/, "portao");
-  const mem = {pass: new Map(), fila: new Map(), fotos: new Map()};
-  const CH = {pass: "id", fila: "id", fotos: "cod"};
-  let db = null, tentou = false;
+/** Guarda grande deste aparelho (IndexedDB). Se o navegador bloquear, fica só na memória.
+    LOJAS: {nome: {ch: "campo da chave", ind: "campo com índice (opcional)"}} */
+function criaBanco(NOME, LOJAS){
+  const mem = {};
+  Object.keys(LOJAS).forEach(l => { mem[l] = new Map(); });
+  const CH = l => LOJAS[l].ch;
+  let db = null, tentou = false, abrindo = null;
   function abre(){
     if (db || tentou) return Promise.resolve(db);
-    return new Promise(res => {
+    return abrindo || (abrindo = new Promise(res => {
       try {
         const rq = indexedDB.open(NOME, 1);
         rq.onupgradeneeded = () => {
           const d = rq.result;
-          d.createObjectStore("pass", {keyPath: "id"}).createIndex("data", "data");
-          d.createObjectStore("fila", {keyPath: "id"});
-          d.createObjectStore("fotos", {keyPath: "cod"});
+          Object.keys(LOJAS).forEach(l => { const st = d.createObjectStore(l, {keyPath: CH(l)}); if (LOJAS[l].ind) st.createIndex(LOJAS[l].ind, LOJAS[l].ind); });
         };
         rq.onsuccess = () => { db = rq.result; tentou = true; res(db); };
         rq.onerror = rq.onblocked = () => { tentou = true; res(null); };
       } catch (e) { tentou = true; res(null); }
-    });
+    }));
   }
   function tx(loja, modo, fn){
     return abre().then(d => {
@@ -2583,22 +2717,29 @@ const BD = (() => {
   }
   return {
     persistente: () => abre().then(d => !!d),
-    put: (loja, o) => tx(loja, "readwrite", st => st ? st.put(o) : void mem[loja].set(o[CH[loja]], o)),
-    putMuitos: (loja, lista) => tx(loja, "readwrite", st => { lista.forEach(o => st ? st.put(o) : mem[loja].set(o[CH[loja]], o)); }),
+    put: (loja, o) => tx(loja, "readwrite", st => st ? st.put(o) : void mem[loja].set(o[CH(loja)], o)),
+    putMuitos: (loja, lista) => tx(loja, "readwrite", st => { lista.forEach(o => st ? st.put(o) : mem[loja].set(o[CH(loja)], o)); }),
     del: (loja, k) => tx(loja, "readwrite", st => st ? st.delete(k) : void mem[loja].delete(k)),
     get: (loja, k) => tx(loja, "readonly", st => st ? st.get(k) : null).then(v => v === undefined || v === null ? (db ? null : mem[loja].get(k) || null) : v),
     todos: loja => tx(loja, "readonly", st => st ? st.getAll() : null).then(v => v || [...mem[loja].values()]),
     limpa: loja => tx(loja, "readwrite", st => st ? st.clear() : void mem[loja].clear()),
-    passPorData: (di, df) => tx("pass", "readonly", st => st ? st.index("data").getAll(IDBKeyRange.bound(di || "0000", df || "9999")) : null)
-      .then(v => v || [...mem.pass.values()].filter(p => (!di || p.data >= di) && (!df || p.data <= df)))
+    conta: loja => tx(loja, "readonly", st => st ? st.count() : null).then(v => v == null ? mem[loja].size : v),
+    /** Itens com o campo do índice entre "de" e "ate" (datas AAAA-MM-DD). */
+    porIndice: (loja, de, ate) => tx(loja, "readonly", st => st ? st.index(LOJAS[loja].ind).getAll(IDBKeyRange.bound(de || "0000", ate || "9999")) : null)
+      .then(v => v || [...mem[loja].values()].filter(o => (!de || o[LOJAS[loja].ind] >= de) && (!ate || o[LOJAS[loja].ind] <= ate)))
   };
-})();
+}
+/** Leituras do portão, fila de envio e fotos. */
+const BD = criaBanco(LK.regs.replace(/regs$/, "portao"), {pass: {ch: "id", ind: "data"}, fila: {ch: "id"}, fotos: {ch: "cod"}});
+BD.passPorData = (di, df) => BD.porIndice("pass", di, df);
+/** Chamada das atividades (banco separado: não mexe no que já está guardado). */
+const BDC = criaBanco(LK.regs.replace(/regs$/, "chamada"), {cham: {ch: "id", ind: "dia"}});
 
 const PORTAO = (() => {
   let cfg = Object.assign({}, CFG_PADRAO);
   const pref = Object.assign({som: true, ap: "", envDia: "", env: [], ultMotivo: ""}, lsLer(LK.portao, {}));
   const P = {
-    dia: hojeISO(), hoje: [], ult: new Map(), porCod: new Map(),
+    dia: hojeISO(), hoje: [], ult: new Map(), porCod: new Map(), porNome: new Map(), porTN: new Map(), ver: 0,
     srv: new Map(), fila: [], est: {mes: "", dia: "", depois: 0}, cheio: 0,
     va: "", vf: "",
     fts: lsLer(LK.fts, {}), fpend: lsLer(LK.fpend, []), fcache: new Map(), baixando: false
@@ -2611,8 +2752,15 @@ const PORTAO = (() => {
 
   // ---------- alunos por código ----------
   function indexa(){
-    P.porCod = new Map();
-    Object.keys(alunos).forEach(t => (alunos[t] || []).forEach(a => { if (a.cod && !P.porCod.has(String(a.cod))) P.porCod.set(String(a.cod), {a, turma: t}); }));
+    P.porCod = new Map(); P.porNome = new Map(); P.porTN = new Map();
+    Object.keys(alunos).forEach(t => (alunos[t] || []).forEach(a => {
+      if (!a.cod) return;
+      const x = {a, turma: t}, k = chave(a.nome);
+      if (!P.porCod.has(String(a.cod))) P.porCod.set(String(a.cod), x);
+      if (!P.porNome.has(k)) P.porNome.set(k, x);
+      P.porTN.set(t + "|" + k, x);
+    }));
+    idxReg = null;
     preencheSelectsPortao();
   }
   function turnos(){
@@ -2650,6 +2798,7 @@ const PORTAO = (() => {
     const h = hojeISO();
     if (P.dia === h) return;
     P.dia = h; P.srv = new Map(); P.est = {mes: "", dia: "", depois: 0};
+    C.hoje = new Map(); C.est = {dia: "", depois: 0}; C.eco = {}; C.aberta = null;
     if (MODO_LOCAL) P.hoje = [];
     remonta();
   }
@@ -2677,7 +2826,7 @@ const PORTAO = (() => {
   /** O que este aparelho já tem (vai junto no pedido de atualização, para o servidor mandar só o que mudou). */
   function estado(){
     const completo = Date.now() - P.cheio > 5 * 60000;   // de tempos em tempos confere tudo (exclusões feitas em outro aparelho)
-    return {va: P.va, vf: P.vf, mes: P.est.mes, dia: P.est.dia, depois: completo ? 0 : P.est.depois};
+    return {va: P.va, vf: P.vf, mes: P.est.mes, dia: P.est.dia, depois: completo ? 0 : P.est.depois, cdia: C.est.dia, cdep: C.est.depois};
   }
 
   // ---------- som ----------
@@ -2747,15 +2896,78 @@ const PORTAO = (() => {
     const tol = Number(cfg.tol) || 0, m = hm2m(p.hora);
     const dentro = !per || isNaN(m) || (m >= hm2m(per.ini) - tol && m <= hm2m(per.fim) + tol);
     if (!dentro) { const at = atividadeDe(p.cod, p.data, p.hora); return {cls: "fora", ativ: at ? at.nome : "", per}; }
-    return {cls: p.via === "manual" ? "man" : "cra", ativ: "", per};
+    return {cls: p.via === "manual" || p.via === "registrar" ? "man" : "cra", ativ: "", per};
   }
-  /** Leituras de um dia: quem ficou com número ímpar de registros (falta o par) → a última ganha o contorno vermelho. */
-  function semPar(lista){
-    const porCod = new Map();
-    lista.forEach(p => { const k = p.data + "|" + p.cod; const v = porCod.get(k) || []; v.push(p); porCod.set(k, v); });
+  // ---------- Registrar e Portão juntos: um registro só do dia do estudante ----------
+  // Os registros feitos no Registrar entram na conta do dia quando o motivo é de ENTRAR ou SAIR DA ESCOLA (Atraso, Retirada
+  // antecipada…). Motivos de circulação interna (Banheiro, Bebedouro…) continuam no relatório, mas não mexem na presença.
+  const INTERNO = /banheiro|bebedouro|agua|enfermaria|saude|coordena|orienta|secretaria|direcao|diretor|biblioteca|pedagog|atendimento|laboratorio|quadra|refeitorio|merenda|lanche/;
+  /** O padrão (enquanto ninguém marcou nada em Cadastro → Motivos): decide pela palavra. */
+  function internoPadrao(m){ return INTERNO.test(normTxt(m)); }
+  function motivoInterno(m){
+    const k = normTxt(m);
+    if (Array.isArray(cfg.motInt) && motivos.some(x => normTxt(x) === k)) return cfg.motInt.includes(k);
+    return INTERNO.test(k);
+  }
+  let idxReg = null;      // registros do Registrar que contam, por dia (refeito quando registros, alunos ou motivos mudam)
+  function alunoDoReg(r){ const k = chave(r.nome); return P.porTN.get(r.turma + "|" + k) || P.porNome.get(k) || null; }
+  function comoEvento(r, x){
+    return {id: "r:" + r.id, reg: r, data: r.data, hora: r.hora, cod: String(x.a.cod), turma: x.turma, nome: x.a.nome,
+      tipo: r.tipo === "saida" ? "saida" : "entrada", via: "registrar", motivo: r.motivo || ""};
+  }
+  function indiceRegs(){
+    if (idxReg) return idxReg;
+    idxReg = new Map();
+    regs.forEach(r => {
+      if (motivoInterno(r.motivo)) return;
+      const x = alunoDoReg(r);
+      if (!x) return;                              // nome digitado em "Outro", sem crachá: fica só no relatório
+      if (!idxReg.has(r.data)) idxReg.set(r.data, []);
+      idxReg.get(r.data).push(comoEvento(r, x));
+    });
+    return idxReg;
+  }
+  function regsDoPeriodo(di, df){ const out = []; indiceRegs().forEach((l, d) => { if (d >= di && d <= df) out.push(...l); }); return out; }
+  /** Tudo o que conta hoje: leituras do portão + registros do Registrar de entrar/sair da escola. */
+  function eventosHoje(){ return P.hoje.concat(regsDoPeriodo(P.dia, P.dia)); }
+  const semR = id => String(id).replace(/^r:/, "");
+  /** Ordem do dia: pela hora; na mesma hora, pela ordem em que foram feitos (o id começa pelo instante da criação). */
+  const ordemDia = (x, y) => String(x.hora).localeCompare(String(y.hora)) || semR(x.id).localeCompare(semR(y.id));
+  function doEstudanteHoje(cod){ cod = String(cod); return eventosHoje().filter(p => String(p.cod) === cod).sort(ordemDia); }
+  /** Situação do dia, seguindo a ordem dos registros: entrada abre, saída fecha. Entrada repetida (crachá + Registrar) vale uma só.
+      abertos = os registros que ficam com o contorno vermelho (entrou e não saiu, ou saiu sem ter entrada). */
+  function situacaoDia(L){
+    let dentro = null; const abertos = [];
+    L.forEach(p => {
+      if (p.tipo === "entrada") dentro = p;
+      else if (dentro) dentro = null;
+      else abertos.push(p);
+    });
+    if (dentro) abertos.push(dentro);
+    return {dentro: !!dentro, abertos, falta: dentro ? "saida" : abertos.length ? "entrada" : ""};
+  }
+  /** Ids com contorno vermelho, numa lista de registros de vários dias e estudantes. */
+  function abertos(lista){
+    const grupos = new Map();
+    lista.forEach(p => { const k = p.data + "|" + p.cod; const v = grupos.get(k) || []; v.push(p); grupos.set(k, v); });
     const ids = new Set();
-    porCod.forEach(v => { if (v.length % 2) { v.sort((x, y) => x.hora.localeCompare(y.hora)); ids.add(v[v.length - 1].id); } });
+    grupos.forEach(v => situacaoDia(v.sort(ordemDia)).abertos.forEach(p => ids.add(p.id)));
     return ids;
+  }
+  const comoFoi = p => p.via === "registrar" ? "Registrar" : p.via === "manual" ? "manual" : "crachá";
+  /** Linha do dia do estudante, para a ficha do Registrar: tudo o que ele tem hoje, do portão e do Registrar. */
+  function linhaDoDia(a, turma){
+    if (!a || !a.cod) return "";
+    const cod = String(a.cod), k = chave(a.nome);
+    const doPortao = P.hoje.filter(p => String(p.cod) === cod);
+    const doReg = regs.filter(r => r.data === P.dia && chave(r.nome) === k).map(r => Object.assign(comoEvento(r, {a, turma}), {interno: motivoInterno(r.motivo)}));
+    const L = doPortao.concat(doReg).sort(ordemDia);
+    if (!L.length) return '<div class="hojeAl"><span class="rot">Hoje:</span> <span class="muted">nenhum registro ainda.</span></div>';
+    const s = situacaoDia(L.filter(p => !p.interno));
+    const itens = L.map(p => `<span class="hjItem${p.interno ? " int" : ""}">${esc(p.hora)} ${p.tipo === "entrada" ? "Entrada" : "Saída"} <span class="muted">(${esc(p.motivo || comoFoi(p))}${p.interno ? ", dentro da escola" : ""})</span></span>`).join("");
+    const estado = s.dentro ? '<strong class="hjEst dentro">Está na escola</strong>' : s.falta === "entrada" ? '<strong class="hjEst">Saída sem entrada</strong>'
+      : L.some(p => !p.interno) ? '<strong class="hjEst fora">Já saiu</strong>' : "";
+    return `<div class="hojeAl"><span class="rot">Hoje:</span> ${itens} ${estado}</div>`;
   }
   const NOME_COR = {cra: "Crachá", man: "Manual", fora: "Fora do horário"};
   const NOME_CURTO = {cra: "crachá", man: "manual", fora: "fora do horário"};
@@ -2765,8 +2977,8 @@ const PORTAO = (() => {
   }
   function pintaLegendas(){ document.querySelectorAll("[data-legenda]").forEach(el => { el.innerHTML = legendaHTML(); }); }
   function tipoDaVez(a){
-    const u = P.ult.get(String(a.cod));           // 1ª leitura do dia = entrada, 2ª = saída, 3ª = entrada…
-    return u && u.tipo === "entrada" ? "saida" : "entrada";
+    // 1ª leitura do dia = entrada, 2ª = saída… Se o Registrar já anotou a saída (ou a entrada), a conta segue de lá.
+    return situacaoDia(doEstudanteHoje(a.cod)).dentro ? "saida" : "entrada";
   }
   function leu(bruto){
     const cod = String(bruto || "").trim().replace(/\s+/g, "");
@@ -2791,15 +3003,20 @@ const PORTAO = (() => {
     const tipo = tipoDaVez(a);
     const hm = agoraHM();
     const linha2 = x.turma + (a.turno ? " · " + a.turno : "");
-    const u = P.ult.get(cod);
-    if (u && via !== "manual" && minutos(hm) - minutos(u.hora) < REPETE_MIN) {
-      tela("repetido", (u.tipo === "entrada" ? "Entrada" : "Saída") + " já registrada", a.nome, linha2 + " · às " + u.hora + ". Para registrar de novo, espere alguns minutos.", cod);
-      som("rep"); return;
+    const meus = doEstudanteHoje(cod), u = meus[meus.length - 1];
+    if (u && via !== "manual") {
+      // mesmo crachá de novo em poucos minutos não grava; e, se o Registrar acabou de anotar (até 30 min), é o mesmo registro
+      const dif = minutos(hm) - minutos(u.hora), janela = u.via === "registrar" ? JANELA_REG : REPETE_MIN;
+      if (Math.abs(dif) < janela) {      // vale para os dois lados: o relógio de outro aparelho pode estar um pouco diferente, e o Registrar aceita anotar a hora combinada
+        tela("repetido", (u.tipo === "entrada" ? "Entrada" : "Saída") + " já registrada", a.nome,
+          linha2 + " · às " + u.hora + (u.via === "registrar" ? " no Registrar (" + u.motivo + "). Se precisar, registre pelo nome." : ". Para registrar de novo, espere alguns minutos."), cod);
+        som("rep"); return;
+      }
     }
     const p = {id: uid(), data: P.dia, hora: hm, cod, turma: x.turma, nome: a.nome, tipo, ap: pref.ap || "", via: via || "cracha", motivo: motivo || ""};
     P.hoje.push(p); P.ult.set(cod, p);
     const c = classifica(p);
-    const falta = P.hoje.filter(q => q.cod === cod).length % 2 === 1;
+    const falta = situacaoDia(doEstudanteHoje(cod)).abertos.length > 0;
     tela(c.cls + (falta ? " so" : ""), (tipo === "entrada" ? "Entrada" : "Saída") + " · " + (c.ativ ? c.ativ : NOME_COR[c.cls]),
       a.nome, linha2 + " · " + hm + (motivo ? " · " + motivo : ""), cod);
     som("ok");
@@ -2829,7 +3046,7 @@ const PORTAO = (() => {
   function renderUltimas(){
     const naFila = new Set(P.fila.map(p => p.id));
     const L = P.hoje.slice(-60).map((p, i) => [p, i]).sort((x, y) => y[0].hora.localeCompare(x[0].hora) || y[1] - x[1]).slice(0, 15).map(x => x[0]);
-    const sp = semPar(P.hoje);
+    const sp = abertos(eventosHoje());
     $("pUltimas").innerHTML = L.length ? L.map(p => { const c = classifica(p); return `
       <tr class="cor ${c.cls}${sp.has(p.id) ? " so" : ""}" title="${esc(NOME_COR[c.cls] + (c.ativ ? " · " + c.ativ : "") + (p.motivo ? " · Motivo: " + p.motivo : ""))}"><td>${esc(p.hora)}${naFila.has(p.id) ? ' <span title="Aguardando envio">⏳</span>' : ""}</td><td>${esc(p.nome)}${c.ativ ? ` <span class="tag fora">${esc(c.ativ)}</span>` : ""}${p.motivo ? `<div class="muted" style="font-size:13px">${esc(p.motivo)}</div>` : ""}</td><td>${esc(p.turma)}</td>
       <td><span class="tag ${p.tipo}">${p.tipo === "entrada" ? "Entrada" : "Saída"}</span> <span class="como">${NOME_CURTO[c.cls]}</span></td>
@@ -2846,16 +3063,23 @@ const PORTAO = (() => {
     const b = e.target.closest("[data-desfazer]");
     if (!b) return;
     const p = P.hoje.find(x => x.id === b.dataset.desfazer);
-    if (!p) return;
+    if (p) pedeExcluir(p);
+  });
+  /** Pede a justificativa e exclui uma leitura do portão (de hoje ou de outro dia, vinda do Relatório). */
+  function pedeExcluir(p){
     if (P.fila.some(x => x.id === p.id)) {       // ainda nem foi enviada: só tira da fila
       P.fila = P.fila.filter(x => x.id !== p.id); BD.del("fila", p.id).catch(() => {});
       P.hoje = P.hoje.filter(x => x.id !== p.id); remonta(); return;
     }
-    abreModal("excluirPass", Object.assign({}, p, {motivo: p.motivo || "Portão"}));
-  });
+    const x = P.porCod.get(String(p.cod));
+    abreModal("excluirPass", Object.assign({}, p, {nome: p.nome || (x ? x.a.nome : "Código " + p.cod), turma: p.turma || (x ? x.turma : ""), motivo: p.motivo || "Portão"}));
+  }
   function excluiPassagem(em, just, termina, falhou){
     const p = em.orig;
-    const some = () => { P.srv.delete(p.id); P.hoje = P.hoje.filter(x => x.id !== p.id); remonta(); termina(); };
+    const some = () => {
+      P.srv.delete(p.id); P.hoje = P.hoje.filter(x => x.id !== p.id); P.ver++; remonta(); termina();
+      if (!$("t-rel").hidden && !$("sub-rel").hidden) atualizaRelatorio(true);
+    };
     if (MODO_LOCAL) {
       BD.del("pass", p.id).then(() => {
         const hi = lsLer(LK.hist, []);
@@ -2871,12 +3095,12 @@ const PORTAO = (() => {
   // ---------- entrada pelo leitor USB (funciona como um teclado) e busca por nome ----------
   let tampao = "", tampaoQuando = 0;
   document.addEventListener("keydown", e => {
-    const noPortao = !$("t-por").hidden, noRegistrar = !$("t-reg").hidden;
-    if ((!noPortao && !noRegistrar) || !$("modal").hidden) return;
+    const noPortao = !$("t-por").hidden, noRegistrar = !$("t-reg").hidden, naChamada = !$("t-rel").hidden && !$("p-pai").hidden && !!C.aberta;
+    if ((!noPortao && !noRegistrar && !naChamada) || !$("modal").hidden) return;
     const alvo = e.target;
     if (alvo && /^(INPUT|TEXTAREA|SELECT)$/.test(alvo.tagName)) return;   // os campos cuidam do que é digitado neles
     if (e.key === "Enter") {
-      if (tampao.length >= 4) { if (noPortao) leu(tampao); else crachaNoRegistrar(tampao); e.preventDefault(); }
+      if (tampao.length >= 4) { if (noPortao) leu(tampao); else if (noRegistrar) crachaNoRegistrar(tampao); else chamadaPorCodigo(tampao); e.preventDefault(); }
       tampao = ""; return;
     }
     if (e.key.length !== 1 || e.ctrlKey || e.metaKey || e.altKey) return;
@@ -2969,14 +3193,14 @@ const PORTAO = (() => {
   // ---------- câmera como leitor (QR Code e, onde o aparelho permite, código de barras) ----------
   let cam = null;   // {stream, det, parar}
   let camVez = 0;   // muda a cada "abrir" e a cada "fechar": se fechar enquanto a câmera ainda está abrindo, ela não fica ligada escondida
-  let destino = null, casaCam = null;   // destino: outra tela (Registrar) que pediu a câmera emprestada
+  let destino = null, casaCam = null, donoCam = "";   // destino: outra tela que pediu a câmera emprestada ("reg" = Registrar, "cham" = chamada)
   const entrega = txt => { if (destino) { const f = destino; f(txt); } else leu(txt); };
   /** Empresta a câmera para outra tela: o quadro da câmera vai para "onde" e cada código lido vai para "fn". */
-  function lerPara(fn, onde){
-    if (cam) desligaCamera();
+  function lerPara(fn, onde, dono){
+    if (cam || destino) desligaCamera();
     casaCam = casaCam || {pai: $("pCamBox").parentNode, prox: $("pCamBox").nextSibling};
     onde.appendChild($("pCamBox"));
-    destino = fn;
+    destino = fn; donoCam = dono || "reg";
     ligaCamera();
   }
   /** Câmera ao vivo dentro da página: só em endereço seguro (https, como na versão Google).
@@ -3090,7 +3314,7 @@ const PORTAO = (() => {
     $("pCamBox").hidden = true; $("pFotoBtn").hidden = true;
     $("pCamBtn").textContent = "Ler com a câmera";
     if (casaCam) { casaCam.pai.insertBefore($("pCamBox"), casaCam.prox); casaCam = null; }
-    if (destino) { destino = null; document.dispatchEvent(new Event("camera-fechou")); }
+    if (destino) { destino = null; donoCam = ""; document.dispatchEvent(new Event("camera-fechou")); }
   }
   $("pCamBtn").addEventListener("click", () => cam ? desligaCamera() : ligaCamera());
   document.addEventListener("visibilitychange", () => { if (document.hidden) { desligaCamera(); fechaFoto(); } });
@@ -3498,11 +3722,18 @@ const PORTAO = (() => {
       (x.ent ? `entrou no colégio às ${x.ent}` : "") + (x.ent && x.sai ? " e " : "") + (x.sai ? `saiu às ${x.sai}` : "") + `, ${quando}. Qualquer dúvida, estamos à disposição.`;
     return `https://wa.me/${d}?text=${encodeURIComponent(msg)}`;
   }
-  /** Leituras de um período (o dia de hoje vem da memória, que tem também o que ainda não subiu). */
+  /** Leituras de um período (o dia de hoje vem da memória, que tem também o que ainda não subiu).
+      A consulta de dias passados fica lembrada por um tempo, para o relatório não buscar tudo de novo a cada atualização. */
+  let memPer = {k: "", quando: 0, ver: -1, v: null};
   function passIntervalo(di, df){
     if (di === P.dia && df === P.dia) return Promise.resolve(P.hoje.slice());
-    return passPeriodo(di, df).then(ps => (df >= P.dia && di <= P.dia) ? ps.filter(p => p.data !== P.dia).concat(P.hoje) : ps);
+    const k = di + "|" + df, vale = MODO_LOCAL ? 20000 : 300000;
+    const base = (memPer.k === k && memPer.ver === P.ver && Date.now() - memPer.quando < vale) ? Promise.resolve(memPer.v)
+      : passPeriodo(di, df).then(ps => { memPer = {k, quando: Date.now(), ver: P.ver, v: ps}; return ps; });
+    return base.then(ps => (df >= P.dia && di <= P.dia) ? ps.filter(p => p.data !== P.dia).concat(P.hoje) : ps.slice());
   }
+  /** Leituras do portão + registros do Registrar que contam (entrar/sair da escola), no período. */
+  function eventosIntervalo(di, df){ return passIntervalo(di, df).then(ps => ps.concat(regsDoPeriodo(di, df))); }
   function diasEntre(di, df){
     const out = []; let d = new Date(di + "T12:00:00"); const f = new Date(df + "T12:00:00");
     while (d <= f && out.length < 400) { out.push(d.toISOString().slice(0, 10)); d.setDate(d.getDate() + 1); }
@@ -3512,8 +3743,8 @@ const PORTAO = (() => {
     let di = $("preDia").value || P.dia, df = $("preFim").value || di;
     if (df < di) { df = di; $("preFim").value = di; }
     $("preErro").style.display = "none";
-    passIntervalo(di, df).then(ps => {
-      const porDia = new Map();                    // dia -> cod -> [leituras]
+    eventosIntervalo(di, df).then(ps => {
+      const porDia = new Map();                    // dia -> cod -> [registros do dia: portão e Registrar]
       ps.forEach(p => {
         if (!porDia.has(p.data)) porDia.set(p.data, new Map());
         const m = porDia.get(p.data); const v = m.get(String(p.cod)) || []; v.push(p); m.set(String(p.cod), v);
@@ -3526,17 +3757,18 @@ const PORTAO = (() => {
         const m = porDia.get(dia) || new Map();
         (t ? [t] : TURMAS).forEach(tt => alunosDaTurma(tt).forEach(a => {
           if (!a.cod || (tn && a.turno !== tn)) return;
-          const L = (m.get(String(a.cod)) || []).slice().sort((x, y) => x.hora.localeCompare(y.hora));
+          const L = (m.get(String(a.cod)) || []).slice().sort(ordemDia);
           const ents = L.filter(p => p.tipo === "entrada"), sais = L.filter(p => p.tipo !== "entrada");
-          const cs = L.map(classifica);
+          const cs = L.map(classifica), sd = situacaoDia(L);
           const ativNomes = [...new Set(cs.map(c => c.ativ).filter(Boolean))];
+          const mots = [...new Set(L.map(p => p.motivo).filter(Boolean))];      // motivos do Registrar e dos registros manuais do portão
           const agenda = atividadesDoDia(a.cod, dia);
           const x = {a, turma: tt, dia, L, ent: ents.length ? ents[0].hora : "", sai: sais.length ? sais[sais.length - 1].hora : "",
-            fora: cs.some(c => c.cls === "fora"), man: cs.some(c => c.cls === "man"), so: L.length % 2 === 1, ativ: ativNomes, agenda};
+            fora: cs.some(c => c.cls === "fora"), man: cs.some(c => c.cls === "man"), so: sd.abertos.length > 0, ativ: ativNomes, agenda};
           x.cls = !L.length ? "" : x.fora ? "fora" : x.man ? "man" : "cra";
           x.sit = !L.length ? (agenda.length ? "Não veio (tinha " + agenda.map(t => t.nome).join(", ") + ")" : "Sem registro")
-            : (x.so ? (L[L.length - 1].tipo === "entrada" ? "Falta a saída" : "Falta a entrada") : "Entrada e saída") +
-              (ativNomes.length ? " · " + ativNomes.join(", ") : x.fora ? " · fora do horário" : "") + (x.man ? " · manual" : "");
+            : (sd.falta === "saida" ? "Falta a saída" : sd.falta === "entrada" ? "Falta a entrada" : "Entrada e saída") +
+              (ativNomes.length ? " · " + ativNomes.join(", ") : x.fora ? " · fora do horário" : "") + (mots.length ? " · " + mots.join(", ") : x.man ? " · manual" : "");
           base.push(x);
         }));
       });
@@ -3544,8 +3776,8 @@ const PORTAO = (() => {
       const daTurma = base.filter(x => x.dia === df || umDia);
       const entrou = base.filter(x => x.L.length).length, so = base.filter(x => x.so).length, fora = base.filter(x => x.fora).length;
       $("preNumeros").innerHTML = `<div><strong>${umDia ? base.length : dias.length}</strong><span>${umDia ? "estudantes" : "dia(s) com leituras"}</span></div>
-        <div><strong>${entrou}</strong><span>${umDia ? "passaram pelo portão" : "presenças pelo portão"}</span></div>
-        <div class="nso"><strong>${so}</strong><span>com um registro só</span></div>
+        <div><strong>${entrou}</strong><span>${umDia ? "com registro no dia" : "presenças registradas"}</span></div>
+        <div class="nso"><strong>${so}</strong><span>falta entrada ou saída</span></div>
         <div class="nfora"><strong>${fora}</strong><span>fora do horário / atividade</span></div>`;
       $("preDica").textContent = (cfg.tgUser ? `Famílias com ✓ recebem o aviso automático pelo Telegram. ` : "") +
         "O botão WhatsApp abre a conversa com a mensagem pronta; é só tocar em enviar." + (dias.length < diasEntre(di, df).length ? " Dias sem nenhuma leitura (fim de semana, feriado) não aparecem." : "");
@@ -3568,8 +3800,8 @@ const PORTAO = (() => {
         const cur = (longo, curto) => `<span class="escLonga">${longo}</span><span class="escCurta">${curto}</span>`;
         const SEM = ["dom", "seg", "ter", "qua", "qui", "sex", "sáb"];
         const rotulo = k => tipoRel === "turma" ? k : fmtData(k).slice(0, 5) + " · " + SEM[diaSemana(k)];
-        $("preResumoCab").innerHTML = `<tr><th>${tipoRel === "turma" ? "Turma" : "Dia"}</th><th>${cur("Passaram pelo portão", "Passaram")}</th><th>Presença</th>` +
-          `<th>${cur("Um registro só", "1 só")}</th><th>${cur("Fora do horário", "Fora")}</th><th>${cur("Manuais", "Man.")}</th></tr>`;
+        $("preResumoCab").innerHTML = `<tr><th>${tipoRel === "turma" ? "Turma" : "Dia"}</th><th>${cur("Com registro no dia", "Com registro")}</th><th>Presença</th>` +
+          `<th>${cur("Falta entrada ou saída", "Falta")}</th><th>${cur("Fora do horário", "Fora")}</th><th>${cur("Manuais", "Man.")}</th></tr>`;
         const linhas = [...grupos.entries()];
         const tot = linhas.reduce((t, [, g]) => { Object.keys(g).forEach(k => t[k] = (t[k] || 0) + g[k]); return t; }, {});
         const num = (v, cls) => v ? `<span class="nTag ${cls}">${v}</span>` : '<span class="muted">–</span>';
@@ -3608,7 +3840,7 @@ const PORTAO = (() => {
   let preResumo = null;
   $("preCsv").addEventListener("click", () => {
     const di = $("preDia").value || P.dia, df = $("preFim").value || di;
-    if (preResumo) { baixaCSV(`resumo-por-${preResumo.tipo}-${di}${df !== di ? "-a-" + df : ""}.csv`, [[preResumo.tipo === "turma" ? "Turma" : "Dia", "Estudantes", "Passaram", "Sem registro", "Um registro só", "Fora do horário", "Manuais", "Presença"]].concat(preResumo.linhas)); return; }
+    if (preResumo) { baixaCSV(`resumo-por-${preResumo.tipo}-${di}${df !== di ? "-a-" + df : ""}.csv`, [[preResumo.tipo === "turma" ? "Turma" : "Dia", "Estudantes", "Com registro", "Sem registro", "Falta entrada ou saída", "Fora do horário", "Manuais", "Presença"]].concat(preResumo.linhas)); return; }
     baixaCSV(`presenca-portao-${di}${df !== di ? "-a-" + df : ""}.csv`, [["Data", "Turma", "Nº", "Aluno", "Turno", "Entrada", "Saída", "Situação"]].concat(
       preLista.map(x => [fmtData(x.dia), x.turma, x.a.n ?? "", x.a.nome, x.a.turno || "", x.ent, x.sai, x.sit])));
   });
@@ -3616,12 +3848,12 @@ const PORTAO = (() => {
   $("expPass").addEventListener("click", () => {
     const di = $("expDe").value, df = $("expAte").value;
     if (!di || !df || di > df) { mostra($("preErro"), "Escolha as duas datas (De e Até).", 5000); return; }
-    passPeriodo(di, df).then(ps => {
+    eventosIntervalo(di, df).then(ps => {
       ps.sort((x, y) => (x.data + x.hora).localeCompare(y.data + y.hora));
-      baixaCSV(`leituras-portao-${di}-a-${df}.csv`, [["Data", "Hora", "Turma", "Aluno", "Código", "Tipo", "Como", "Motivo", "Atividade"]].concat(
+      baixaCSV(`entradas-e-saidas-${di}-a-${df}.csv`, [["Data", "Hora", "Turma", "Aluno", "Código", "Tipo", "Como", "Motivo", "Atividade"]].concat(
         ps.map(p => { const c = classifica(p); return [fmtData(p.data), p.hora, p.turma, p.nome || ((P.porCod.get(p.cod) || {a: {}}).a.nome || ""), p.cod, p.tipo === "entrada" ? "Entrada" : "Saída",
-          p.via === "manual" ? "Manual" : "Crachá", p.motivo || "", c.ativ || (c.cls === "fora" ? "Fora do horário" : "")]; })));
-      mostra($("preMsg"), `${ps.length} leitura(s) exportada(s).`, 4000);
+          p.via === "registrar" ? "Registrar" : p.via === "manual" ? "Manual (portão)" : "Crachá", p.motivo || "", c.ativ || (c.cls === "fora" ? "Fora do horário" : "")]; })));
+      mostra($("preMsg"), `${ps.length} registro(s) exportado(s).`, 4000);
     }).catch(e => mostra($("preErro"), "Não foi possível exportar. " + msgErro(e)));
   });
 
@@ -3721,14 +3953,15 @@ const PORTAO = (() => {
 
   // ---------- cópia de segurança: leituras e fotos ----------
   async function extrasDaCopia(){
-    return {pass: await BD.todos("pass"), fotos: (await BD.todos("fotos")).filter(f => f.img)};
+    return {pass: await BD.todos("pass"), fotos: (await BD.todos("fotos")).filter(f => f.img), cham: await BDC.todos("cham")};
   }
   /** Depois de restaurar a cópia: leituras e fotos. No modo local substitui; na versão Google soma, em lotes. */
   async function restauraExtras(c, progresso){
-    const pass = Array.isArray(c.pass) ? c.pass : [], fotos = Array.isArray(c.fotos) ? c.fotos : [];
+    const pass = Array.isArray(c.pass) ? c.pass : [], fotos = Array.isArray(c.fotos) ? c.fotos : [], cham = Array.isArray(c.cham) ? c.cham : [];
     if (MODO_LOCAL) {
-      await BD.limpa("pass"); await BD.limpa("fotos");
-      await BD.putMuitos("pass", pass); await BD.putMuitos("fotos", fotos);
+      await BD.limpa("pass"); await BD.limpa("fotos"); await BDC.limpa("cham");
+      await BD.putMuitos("pass", pass); await BD.putMuitos("fotos", fotos); await BDC.putMuitos("cham", cham);
+      C.hoje = new Map(cham.filter(m => m.dia === P.dia).map(m => [m.id, m])); P.ver++;
       P.fts = {}; fotos.forEach(f => { P.fts[f.cod] = f.ts || 1; }); P.fcache.clear(); gravaFts();
       await carregaLocal();
       return;
@@ -3736,6 +3969,7 @@ const PORTAO = (() => {
     const manda = (nome, arg) => new Promise((res, rej) => pede(nome, [arg], res, rej));
     for (let i = 0; i < pass.length; i += 400) { await manda("registrarPassagens", pass.slice(i, i + 400)); progresso && progresso(`Leituras: ${Math.min(i + 400, pass.length)} de ${pass.length}`); }
     for (let i = 0; i < fotos.length; i += 5) { await manda("salvarFotos", fotos.slice(i, i + 5)); progresso && progresso(`Fotos: ${Math.min(i + 5, fotos.length)} de ${fotos.length}`); }
+    for (let i = 0; i < cham.length; i += 400) { await manda("registrarChamadas", cham.slice(i, i + 400)); progresso && progresso(`Chamadas: ${Math.min(i + 400, cham.length)} de ${cham.length}`); }
   }
   /** Fotos vindas da lista protegida: [{cod, img, ts}] */
   async function restauraFotos(lista){
@@ -3746,8 +3980,9 @@ const PORTAO = (() => {
     renderFotos();
   }
   async function zera(){
-    await BD.limpa("pass"); await BD.limpa("fila"); await BD.limpa("fotos");
-    P.fts = {}; P.fpend = []; P.fcache.clear(); P.hoje = []; P.fila = []; P.srv = new Map();
+    await BD.limpa("pass"); await BD.limpa("fila"); await BD.limpa("fotos"); await BDC.limpa("cham");
+    P.fts = {}; P.fpend = []; P.fcache.clear(); P.hoje = []; P.fila = []; P.srv = new Map(); P.ver++;
+    C.hoje = new Map(); C.pend = {}; C.eco = {}; C.aberta = null; gravaCpend();
     remonta();
   }
   $("trazerArq").addEventListener("change", e => {
@@ -3759,7 +3994,7 @@ const PORTAO = (() => {
       let c;
       try { c = JSON.parse(rd.result); if (!c || !Array.isArray(c.regs) || !Array.isArray(c.hist) || typeof c.alunos !== "object") throw 0; }
       catch (err) { mostra($("trazerErro"), "Este arquivo não é uma cópia do app."); return; }
-      const leve = Object.assign({}, c); delete leve.pass; delete leve.fotos;
+      const leve = Object.assign({}, c); delete leve.pass; delete leve.fotos; delete leve.cham;
       mostra($("trazerMsg"), "Enviando os registros…");
       chama("restaurarCopia", [leve], () => {
         restauraExtras(c, t => mostra($("trazerMsg"), t)).then(() => { mostra($("trazerMsg"), "Pronto: os dados do modo local estão na planilha.", 8000); carregar(true); })
@@ -3781,7 +4016,7 @@ const PORTAO = (() => {
   }
   function aoMostrar(){ if (destino) desligaCamera(); viraDia(); renderUltimas(); if (dedoFino) $("pCodigo").focus(); acende(); pintaLegendas(); }
   /** Saiu do Portão para a aba "id": a câmera só continua se foi o Registrar que pediu e a aba é o Registrar. */
-  function aoSair(id){ if (!destino || id !== "t-reg") desligaCamera(); if (document.body.classList.contains("cheia")) $("pCheia").click(); }
+  function aoSair(id){ if (!(donoCam === "reg" && id === "t-reg")) desligaCamera(); if (document.body.classList.contains("cheia")) $("pCheia").click(); }
   window.addEventListener("beforeprint", () => { $("cabImp").textContent = (escola ? escola + " · " : "") + "impresso em " + fmtData(hojeISO()) + " às " + agoraHM(); });
 
   // ---------- atividades fora do horário (monitoria, reforço…): cadastro ----------
@@ -3896,41 +4131,154 @@ const PORTAO = (() => {
       err => mostra($("atiErro"), "Não foi salvo. " + msgErro(err)));
   }
 
-  // ---------- painel das atividades (Relatório → Atividades) ----------
-  function statusAtiv(t, cod, dia, ps){
-    const tol = Number(cfg.tol) || 0, ini = hm2m(t.ini), fim = hm2m(t.fim);
-    const no = ps.filter(p => String(p.cod) === String(cod) && hm2m(p.hora) >= ini - tol && hm2m(p.hora) <= fim + tol).sort((x, y) => x.hora.localeCompare(y.hora));
-    if (no.length) { const e = no.find(p => p.tipo === "entrada") || no[0], s = no.filter(p => p.tipo !== "entrada").pop();
-      return {st: "pres", txt: "Presente", hora: e.hora + (s && s !== e ? "–" + s.hora : "")}; }
-    const agora = hm2m(agoraHM());
-    if (dia > P.dia || (dia === P.dia && agora < ini + tol)) return {st: "agen", txt: "Agendado", hora: ""};
-    return {st: "aus", txt: "Ausente", hora: ""};
+  // ---------- chamada das atividades (Relatório → Atividades) ----------
+  // Quem já está na escola não passa no portão antes da monitoria: por isso dá para marcar a presença aqui,
+  // com um toque ou com o crachá. Cada marca fica guardada neste aparelho e, na versão Google, vai para a planilha.
+  // pend: marcas deste aparelho que ainda não foram para a planilha · eco: já foram, falta a planilha devolver (até lá, a nossa vale)
+  const C = {hoje: new Map(), est: {dia: "", depois: 0}, pend: lsLer(LK.cpend, {}), eco: {}, aberta: null};
+  if (!C.pend || typeof C.pend !== "object" || Array.isArray(C.pend)) C.pend = {};
+  const gravaCpend = () => { try { lsGravar(LK.cpend, C.pend); } catch (e) {} };
+  const chamId = (dia, ativ, cod) => dia + "|" + ativ + "|" + cod;
+  const deLinha = i => ({id: i[0], dia: i[1], ativ: i[2], cod: i[3], st: i[4], hora: i[5], ap: i[6], ts: Number(i[7]) || 0});
+  /** Marca (ou tira a marca de) um estudante na chamada. st: "p" presente · "a" ausente · "" sem marca (volta ao automático). */
+  let memCham = {dia: "", mapa: null, ts: 0};      // versão Google: marcas de um dia que já passou, para não ir à planilha a cada toque
+  function marca(dia, ativId, cod, st){
+    const m = {id: chamId(dia, ativId, cod), dia, ativ: ativId, cod: String(cod), st, hora: agoraHM(), ap: pref.ap || "", ts: Date.now()};
+    if (dia === P.dia) C.hoje.set(m.id, m);
+    else if (memCham.dia === dia && memCham.mapa) memCham.mapa.set(m.id, m);
+    if (!MODO_LOCAL) { C.pend[m.id] = m.ts; delete C.eco[m.id]; gravaCpend(); agendaCham(900); }
+    return BDC.put("cham", m);
   }
+  /** Marcas de um dia: Map id → marca. */
+  function marcasDoDia(dia){
+    if (dia === P.dia) return Promise.resolve(new Map(C.hoje));
+    const locais = BDC.porIndice("cham", dia, dia);
+    if (MODO_LOCAL) return locais.then(l => new Map(l.map(m => [m.id, m])));
+    if (memCham.dia === dia && memCham.mapa && Date.now() - memCham.ts < 60000) return Promise.resolve(new Map(memCham.mapa));
+    // versão Google, outro dia: o que está na planilha + o que este aparelho ainda não conseguiu enviar
+    return Promise.all([locais, new Promise((res, rej) => pede("getChamadas", [dia, dia], res, rej))]).then(([l, r]) => {
+      const mapa = new Map();
+      ((r && r.linhas) || []).forEach(i => { const m = deLinha(i); mapa.set(m.id, m); });   // a planilha está na ordem em que as marcas chegaram: vale a última
+      l.filter(m => C.pend[m.id]).forEach(m => mapa.set(m.id, m));
+      memCham = {dia, mapa, ts: Date.now()};
+      return new Map(mapa);
+    });
+  }
+  /**
+   * Versão Google: marcas de hoje feitas em qualquer aparelho. Vale a ÚLTIMA que chegou na planilha (a ordem das linhas),
+   * e não o relógio de cada aparelho, que pode estar adiantado ou atrasado.
+   */
+  function aplicaCham(ch){
+    if (!ch || MODO_LOCAL) return;
+    viraDia();
+    if (ch.dia !== P.dia) return;
+    if (ch.parcial && C.est.dia === ch.dia && ch.depois < C.est.depois) return;     // resposta mais velha do que a que já foi aplicada
+    const antes = C.hoje;
+    if (!ch.parcial) {             // lista completa do dia: a planilha é quem manda; do aparelho fica só o que ainda não apareceu nela
+      C.hoje = new Map();
+      antes.forEach((m, id) => { if (C.pend[id] || C.eco[id] != null) C.hoje.set(id, m); });
+    }
+    const novas = [];
+    (ch.itens || []).forEach(i => {
+      const m = deLinha(i);
+      if (C.pend[m.id]) return;                                                      // este aparelho tem uma marca mais nova, ainda por enviar
+      if (C.eco[m.id] != null) { if (C.eco[m.id] !== m.ts) return; delete C.eco[m.id]; }   // antes de voltar a nossa, o que vier é mais antigo
+      const loc = C.hoje.get(m.id);
+      if (!loc || loc.st !== m.st || loc.ts !== m.ts || loc.hora !== m.hora) novas.push(m);
+      C.hoje.set(m.id, m);
+    });
+    C.est = {dia: ch.dia, depois: ch.depois};
+    if (novas.length) BDC.putMuitos("cham", novas).catch(() => {});
+    if ((novas.length || C.hoje.size !== antes.size) && !$("t-rel").hidden && !$("p-pai").hidden) renderPainel();
+  }
+  let enviandoCham = false, tCham = null;
+  function agendaCham(ms){ clearTimeout(tCham); tCham = setTimeout(enviaCham, ms); }
+  function enviaCham(){
+    const ids = Object.keys(C.pend).slice(0, 200);
+    if (MODO_LOCAL || enviandoCham || !ids.length) return;
+    enviandoCham = true;
+    Promise.all(ids.map(id => BDC.get("cham", id))).then(ms => {
+      const lote = ms.filter(Boolean).map(m => ({id: m.id, dia: m.dia, ativ: m.ativ, cod: m.cod, st: m.st, hora: m.hora, ap: m.ap, ts: m.ts}));
+      ids.forEach((id, i) => { if (!ms[i]) delete C.pend[id]; });           // não está mais neste aparelho: não há o que enviar
+      if (!lote.length) { enviandoCham = false; gravaCpend(); return; }
+      pede("registrarChamadas", [lote], r => {
+        enviandoCham = false;
+        const ok = new Set((r && r.ok) || []);
+        lote.forEach(m => { if (ok.has(m.id) && C.pend[m.id] === m.ts) { delete C.pend[m.id]; if (m.dia === P.dia) C.eco[m.id] = m.ts; } });   // se mudou de novo enquanto enviava, continua na fila
+        gravaCpend();
+        if (Object.keys(C.pend).length) agendaCham(400);
+      }, () => { enviandoCham = false; agendaCham(20000); });
+    }).catch(() => { enviandoCham = false; });
+  }
+  window.addEventListener("online", () => agendaCham(700));
+
+  /** Situação do estudante na atividade: a marca da chamada vale mais; sem marca, o app olha o portão. */
+  function statusAtiv(t, cod, dia, ev, marcas){
+    const m = marcas.get(chamId(dia, t.id, cod));
+    if (m && m.st === "p") return {st: "pres", txt: "Presente", det: "chamada às " + m.hora, marca: "p"};
+    if (m && m.st === "a") return {st: "aus", txt: "Ausente", det: "marcado na chamada", marca: "a"};
+    const tol = Number(cfg.tol) || 0, ini = hm2m(t.ini), fim = hm2m(t.fim), h = p => hm2m(p.hora);
+    const agen = {st: "agen", txt: "Agendado", det: "", marca: ""};
+    if (dia > P.dia) return agen;
+    const meus = ev.filter(p => String(p.cod) === String(cod)).sort(ordemDia);
+    // 1) passou no portão para a atividade: ENTRADA perto do horário; ou leitura marcada como saída DEPOIS do início e fora do
+    //    horário de aula do estudante (o portão alterna entrada/saída: quem esqueceu de passar o crachá ao sair da aula e volta
+    //    para a monitoria aparece como "saída"). Saída ANTES de a atividade começar não conta: quem foi embora não está nela.
+    const iE = meus.findIndex(p => h(p) >= ini - tol && h(p) <= fim + tol && (p.tipo === "entrada" || (h(p) >= ini && classifica(p).cls === "fora")));
+    if (iE >= 0) {
+      const e = meus[iE], s = e.tipo === "entrada" ? meus.slice(iE + 1).find(p => p.tipo !== "entrada") : null;
+      return {st: "pres", txt: "Presente", det: "portão " + e.hora + (s ? "–" + s.hora : ""), marca: ""};
+    }
+    const agora = hm2m(agoraHM()), hoje = dia === P.dia;
+    if (hoje && agora < ini - tol) return agen;
+    // 2) já estava na escola quando a atividade começou (entrou antes e ainda não tinha saído): provavelmente está lá; a chamada confirma
+    const antes = meus.filter(p => h(p) < ini), depois = meus.filter(p => h(p) >= ini);
+    if (situacaoDia(antes).dentro) {
+      const e = antes.filter(p => p.tipo === "entrada").pop(), s = depois.find(p => p.tipo !== "entrada");
+      return {st: "esc", txt: "Na escola", det: "entrou às " + e.hora + (s ? ", saiu às " + s.hora : " e não saiu"), marca: ""};
+    }
+    // saiu durante a atividade sem ter entrada registrada: estava na escola e a chegada não foi lida
+    if (depois.length && depois[0].tipo !== "entrada" && h(depois[0]) <= fim + tol) return {st: "esc", txt: "Na escola", det: "saiu às " + depois[0].hora + " (sem entrada registrada)", marca: ""};
+    if (hoje && agora < ini + tol) return agen;
+    return {st: "aus", txt: "Ausente", det: "", marca: ""};
+  }
+  const ICONE_ST = {pres: "✓", esc: "●", agen: "◷", aus: "✕"}, ORDEM_ST = {pres: 0, esc: 1, agen: 2, aus: 3};
+  let dadosPainel = [], vezPainel = 0;
   function renderPainel(){
-    const dia = $("paiDia").value || P.dia, tp = $("paiTipo").value, dw = diaSemana(dia);
+    const dia = $("paiDia").value || P.dia, tp = $("paiTipo").value, dw = diaSemana(dia), vez = ++vezPainel;
+    $("paiErro").style.display = "none";
     $("paiCabImp").textContent = "Painel das atividades · " + fmtData(dia) + (tp && TIPOS_ATIV[tp] ? " · " + TIPOS_ATIV[tp].nome : "");
     if (!$("paiTipo").options.length || $("paiTipo").dataset.ok !== "1") {
       $("paiTipo").innerHTML = '<option value="">Todas</option>' + Object.keys(TIPOS_ATIV).map(k => `<option value="${k}">${TIPOS_ATIV[k].nome}</option>`).join("");
       $("paiTipo").dataset.ok = "1"; $("paiTipo").value = tp;
     }
     $("paiLeg").innerHTML = Object.keys(TIPOS_ATIV).map(k => `<span class="lgA" style="${corAtiv({tipo: k})}">${TIPOS_ATIV[k].nome}</span>`).join("") +
-      '<span class="stt pres">✓ Presente</span><span class="stt agen">◷ Agendado</span><span class="stt aus">✕ Ausente</span>';
+      '<span class="stt pres">✓ Presente</span><span class="stt esc">● Na escola no horário (a chamada confirma)</span><span class="stt agen">◷ Agendado</span><span class="stt aus">✕ Ausente</span>';
     const L = (cfg.ativ || []).filter(t => (t.dias || []).includes(dw) && (!tp || (t.tipo || "outra") === tp)).sort((x, y) => x.ini.localeCompare(y.ini) || x.nome.localeCompare(y.nome));
-    if (!L.length) {
+    const aberta = C.aberta && C.aberta.dia === dia ? (cfg.ativ || []).find(t => t.id === C.aberta.id && (t.dias || []).includes(dw)) : null;
+    if (C.aberta && !aberta) { C.aberta = null; if (donoCam === "cham") desligaCamera(); }
+    $("paiVisao").hidden = !!aberta; $("paiChamada").hidden = !aberta;
+    if (!L.length && !aberta) {
+      dadosPainel = [];
       $("paiNum").innerHTML = ""; $("paiMatriz").innerHTML = "";
       $("paiCards").innerHTML = `<p class="muted">Nenhuma atividade neste dia${tp ? " deste tipo" : ""}. Cadastre em <strong>Cadastro → Atividades</strong>.</p>`;
       return;
     }
-    passIntervalo(dia, dia).then(ps => {
-      let nP = 0, nA = 0, nG = 0;
+    Promise.all([eventosIntervalo(dia, dia), marcasDoDia(dia)]).then(([ev, marcas]) => {
+      if (vez !== vezPainel) return;            // já pediram outro dia ou outra tela: esta resposta ficou velha
+      const monta = t => ({t, al: (t.cods || []).map(c => P.porCod.get(String(c))).filter(Boolean).map(x => Object.assign({x}, statusAtiv(t, x.a.cod, dia, ev, marcas)))});
+      if (aberta) { desenhaChamada(monta(aberta), dia); return; }
+      let n = {pres: 0, esc: 0, agen: 0, aus: 0};
       const dados = L.map(t => {
-        const al = (t.cods || []).map(c => P.porCod.get(String(c))).filter(Boolean).map(x => Object.assign({x}, statusAtiv(t, x.a.cod, dia, ps)))
-          .sort((a, b) => ({pres: 0, agen: 1, aus: 2}[a.st] - {pres: 0, agen: 1, aus: 2}[b.st]) || a.x.a.nome.localeCompare(b.x.a.nome, "pt-BR"));
-        al.forEach(s => { if (s.st === "pres") nP++; else if (s.st === "aus") nA++; else nG++; });
-        return {t, al};
+        const d = monta(t);
+        d.al.sort((a, b) => ORDEM_ST[a.st] - ORDEM_ST[b.st] || a.x.a.nome.localeCompare(b.x.a.nome, "pt-BR"));
+        d.al.forEach(s => { n[s.st]++; });
+        return d;
       });
+      dadosPainel = dados.map(d => Object.assign({dia}, d));
       $("paiNum").innerHTML = `<div><strong>${L.length}</strong><span>atividade(s) no dia</span></div>
-        <div class="stp"><strong>${nP}</strong><span>✓ presentes</span></div><div class="stg"><strong>${nG}</strong><span>◷ agendados</span></div><div class="sta"><strong>${nA}</strong><span>✕ ausentes</span></div>`;
+        <div class="stp"><strong>${n.pres}</strong><span>✓ presentes</span></div><div class="ste"><strong>${n.esc}</strong><span>● na escola</span></div>
+        <div class="stg"><strong>${n.agen}</strong><span>◷ agendados</span></div><div class="sta"><strong>${n.aus}</strong><span>✕ ausentes</span></div>`;
       // matriz de horários (tela grande): uma linha por atividade, a barra ocupa o horário
       const m0 = Math.floor(Math.min(...L.map(t => hm2m(t.ini))) / 60) * 60, m1 = Math.ceil(Math.max(...L.map(t => hm2m(t.fim))) / 60) * 60;
       const passo = 30, cols = Math.max(2, (m1 - m0) / passo);
@@ -3944,14 +4292,83 @@ const PORTAO = (() => {
           <div class="mxB" style="grid-row:${r + 2};grid-column:${c0} / ${c1};${corAtiv(t)}" title="${esc(t.nome + " · " + t.ini + "–" + t.fim)}">
             <span>${esc(t.ini)}–${esc(t.fim)}</span><span class="mxC">${pres}/${al.length} ✓</span></div>`;
       }).join("");
+      const podeChamar = dia <= P.dia;
       $("paiCards").innerHTML = dados.map(({t, al}) => `<article class="paiCard" style="${corAtiv(t)}">
         <div class="pcTopo"><span class="atiIc" aria-hidden="true">${tipoAtiv(t).ic}</span><div><strong>${esc(t.nome)}</strong>
-          <div class="muted">${esc(tipoAtiv(t).nome)} · ${esc(t.ini)}–${esc(t.fim)}${t.local ? " · " + esc(t.local) : ""}${t.resp ? " · " + esc(t.resp) : ""}</div></div></div>
-        <ul>${al.length ? al.map(s => `<li><span class="stt ${s.st}">${s.st === "pres" ? "✓" : s.st === "aus" ? "✕" : "◷"} ${s.txt}</span><span class="nm">${esc(s.x.a.nome)}</span><span class="muted">${esc(s.x.turma)}${s.hora ? " · " + esc(s.hora) : ""}</span></li>`).join("") : '<li class="muted">Sem estudantes cadastrados.</li>'}</ul>
+          <div class="muted">${esc(tipoAtiv(t).nome)} · ${esc(t.ini)}–${esc(t.fim)}${t.local ? " · " + esc(t.local) : ""}${t.resp ? " · " + esc(t.resp) : ""}</div></div>
+          ${podeChamar && al.length ? `<button type="button" class="btn sm pri noprint" data-chamada="${esc(t.id)}">Fazer chamada</button>` : ""}</div>
+        <ul>${al.length ? al.map(s => `<li><span class="stt ${s.st}">${ICONE_ST[s.st]} ${s.txt}</span><span class="nm">${esc(s.x.a.nome)}</span><span class="muted">${esc(s.x.turma)}${s.det ? " · " + esc(s.det) : ""}</span></li>`).join("") : '<li class="muted">Sem estudantes cadastrados.</li>'}</ul>
       </article>`).join("");
-    }).catch(e => mostra($("paiErro"), "Não foi possível carregar as leituras. " + msgErro(e)));
+    }).catch(e => { if (vez === vezPainel) mostra($("paiErro"), "Não foi possível carregar as leituras. " + msgErro(e)); });
   }
-  ["paiDia", "paiTipo"].forEach(id => $(id).addEventListener("change", renderPainel));
+  /** Tela da chamada de uma atividade: um botão Presente e um Ausente por estudante; o crachá marca presente. */
+  function desenhaChamada({t, al}, dia){
+    al.sort((a, b) => a.x.a.nome.localeCompare(b.x.a.nome, "pt-BR"));
+    dadosPainel = [{t, al, dia}];
+    $("paiChamada").setAttribute("style", corAtiv(t));
+    $("chTopo").innerHTML = `<span class="atiIc" aria-hidden="true">${tipoAtiv(t).ic}</span><div><strong>Chamada: ${esc(t.nome)}</strong>
+      <div class="muted">${esc(fmtData(dia))} · ${esc(t.ini)}–${esc(t.fim)}${t.local ? " · " + esc(t.local) : ""}${t.resp ? " · " + esc(t.resp) : ""}</div></div>`;
+    const n = {pres: 0, esc: 0, agen: 0, aus: 0}; al.forEach(s => { n[s.st]++; });
+    const marcados = al.filter(s => s.marca).length;
+    $("chConta").innerHTML = `<span class="stt pres">✓ ${n.pres} presente(s)</span><span class="stt aus">✕ ${n.aus} ausente(s)</span>` +
+      (n.esc ? `<span class="stt esc">● ${n.esc} na escola</span>` : "") + (n.agen ? `<span class="stt agen">◷ ${n.agen} sem marca</span>` : "") +
+      `<span class="muted">${marcados} de ${al.length} marcado(s) na chamada</span>`;
+    $("chLista").innerHTML = al.map(s => `<li data-cod="${esc(s.x.a.cod)}">
+        <div class="chNome"><strong>${esc(s.x.a.nome)}</strong><span class="muted">${esc(s.x.turma)}${s.marca ? "" : " · " + (s.det ? esc(s.txt.toLowerCase() + " (" + s.det + ")") : esc(s.txt.toLowerCase()))}</span></div>
+        <div class="chBts" role="group" aria-label="Chamada de ${esc(s.x.a.nome)}">
+          <button type="button" class="chB p${s.marca === "p" ? " on" : ""}" data-chm="p" aria-pressed="${s.marca === "p"}">✓ Presente</button>
+          <button type="button" class="chB a${s.marca === "a" ? " on" : ""}" data-chm="a" aria-pressed="${s.marca === "a"}">✕ Ausente</button>
+        </div></li>`).join("");
+  }
+  function abreChamada(ativId){
+    C.aberta = {id: ativId, dia: $("paiDia").value || P.dia};
+    $("chMsg").textContent = ""; $("chMsg").className = "dica";
+    renderPainel();
+    setTimeout(() => { if (C.aberta) { $("p-pai").scrollIntoView({block: "start"}); if (dedoFino) $("chCod").focus(); } }, 80);
+  }
+  function fechaChamada(){ if (donoCam === "cham") desligaCamera(); C.aberta = null; renderPainel(); }
+  /** Crachá lido durante a chamada: marca presente (se o estudante é da atividade). */
+  function chamadaPorCodigo(bruto){
+    if (!C.aberta) return false;
+    const cod = String(bruto || "").trim().replace(/\s+/g, "");
+    const x = P.porCod.get(cod) || P.porCod.get(cod.replace(/^0+/, ""));
+    const t = (cfg.ativ || []).find(a => a.id === C.aberta.id), aviso = $("chMsg");
+    if (!x) { aviso.className = "dica ruim"; aviso.textContent = "Crachá não encontrado na lista: " + cod.slice(0, 24); som("erro"); return false; }
+    if (!t || !(t.cods || []).includes(String(x.a.cod))) {
+      aviso.className = "dica ruim"; aviso.textContent = `${x.a.nome} (${x.turma}) não está na lista desta atividade. Para incluir: Cadastro → Atividades.`; som("erro"); return false;
+    }
+    aviso.className = "dica bom"; aviso.textContent = `✓ ${x.a.nome} (${x.turma}): presente`; som("ok");
+    marca(C.aberta.dia, t.id, x.a.cod, "p").then(renderPainel).catch(e => mostra($("paiErro"), msgErro(e), 6000));
+    return true;
+  }
+  $("paiCards").addEventListener("click", e => { const b = e.target.closest("[data-chamada]"); if (b) abreChamada(b.dataset.chamada); });
+  $("chLista").addEventListener("click", e => {
+    const b = e.target.closest("[data-chm]"), li = b && b.closest("[data-cod]");
+    if (!li || !C.aberta) return;
+    const novo = b.classList.contains("on") ? "" : b.dataset.chm;      // tocar de novo no que já está marcado tira a marca
+    marca(C.aberta.dia, C.aberta.id, li.dataset.cod, novo).then(renderPainel).catch(err => mostra($("paiErro"), msgErro(err), 6000));
+  });
+  $("chCod").addEventListener("keydown", e => {
+    if (e.key !== "Enter") return;
+    e.preventDefault();
+    const v = $("chCod").value.trim(); $("chCod").value = "";
+    if (v) chamadaPorCodigo(v);
+  });
+  $("chCam").addEventListener("click", () => {
+    if ($("chCam").dataset.on) { desligaCamera(); return; }
+    $("chCam").dataset.on = "1"; $("chCam").textContent = "Fechar câmera";
+    lerPara(chamadaPorCodigo, $("chCamBox"), "cham");
+  });
+  document.addEventListener("camera-fechou", () => { delete $("chCam").dataset.on; $("chCam").textContent = "Câmera"; });
+  $("chFim").addEventListener("click", fechaChamada);
+  ["paiDia", "paiTipo"].forEach(id => $(id).addEventListener("change", () => { if (C.aberta) { if (donoCam === "cham") desligaCamera(); C.aberta = null; } renderPainel(); }));
+  $("paiImprimir").addEventListener("click", () => window.print());
+  $("paiCsv").addEventListener("click", () => {
+    if (!dadosPainel.length) { mostra($("paiErro"), "Não há atividades neste dia para baixar.", 4000); return; }
+    const linhas = [["Data", "Atividade", "Tipo", "Horário", "Local", "Responsável", "Turma", "Estudante", "Situação", "Detalhe"]];
+    dadosPainel.forEach(({t, al, dia}) => al.forEach(s => linhas.push([fmtData(dia), t.nome, tipoAtiv(t).nome, t.ini + "–" + t.fim, t.local || "", t.resp || "", s.x.turma, s.x.a.nome, s.txt, s.det || ""])));
+    baixaCSV(`atividades-${dadosPainel[0].dia}.csv`, linhas);
+  });
 
   // ---------- início ----------
   async function carregaLocal(){
@@ -3962,19 +4379,28 @@ const PORTAO = (() => {
     $("preDia").value = P.dia; $("preFim").value = P.dia; $("expDe").value = P.dia.slice(0, 8) + "01"; $("expAte").value = P.dia;
     mostraModo();
     tela("espera", "Pronto para ler", "Passe o crachá", "", "");
+    // marcas de hoje guardadas neste aparelho. Se a planilha já respondeu, ela é quem manda: daqui só entra o que ainda não foi enviado.
+    const jaVeio = !MODO_LOCAL && C.est.dia === P.dia;
+    (await BDC.porIndice("cham", P.dia, P.dia)).forEach(m => { if (jaVeio ? C.pend[m.id] : !C.hoje.has(m.id)) C.hoje.set(m.id, m); });
     if (MODO_LOCAL) await carregaLocal();
-    else { P.fila = await BD.todos("fila"); remonta(); if (P.fila.length) agendaEnvio(2000); sobeFotos(); }
+    else { P.fila = await BD.todos("fila"); remonta(); if (P.fila.length) agendaEnvio(2000); sobeFotos(); if (Object.keys(C.pend).length) agendaCham(2500); }
   }
   inicia().catch(() => {});
-  setInterval(() => { viraDia(); if (!MODO_LOCAL && P.fila.length) envia(); }, 30000);
+  setInterval(() => { viraDia(); if (!MODO_LOCAL && P.fila.length) envia(); if (!MODO_LOCAL && Object.keys(C.pend).length) enviaCham(); }, 30000);
 
   return {
     estado, aplicaPass, sincFotos, restauraFotos, indexa, aoMostrar, aoSair, aoSub, excluiPassagem, extrasDaCopia, restauraExtras, zera, leu,
+    /** Registros, motivos ou lista mudaram: a conta do dia é refeita na próxima vez que alguém precisar. */
+    aoRegs(){ idxReg = null; },
+    aplicaCham, chamadaPorCodigo,
+    /** Quantas leituras do portão e marcas de chamada estão guardadas neste aparelho (para o lembrete da cópia de segurança). */
+    contaDados: () => Promise.all([BD.conta("pass"), BDC.conta("cham")]).then(([pass, cham]) => ({pass, cham})),
+    abertosHoje: () => abertos(eventosHoje()), linhaDoDia, passIntervalo, pedeExcluir, motivoInterno, internoPadrao, comoFoi,
     lerPara, desligaCamera, acha: cod => P.porCod.get(String(cod || "").trim()) || P.porCod.get(String(cod || "").trim().replace(/^0+/, "")) || null,
     classifica, periodoDaTurma, legendaHTML,
-    config(c){ cfg = Object.assign({}, CFG_PADRAO, c || {}); mostraModo(); if (!$("t-cad").hidden) { if (!$("p-aju").hidden || !$("p-cra").hidden) mostraAjustes(); if (!$("p-ati").hidden && !atiEditando) renderAtividades(); } if (!$("t-rel").hidden && !$("p-pai").hidden) renderPainel(); renderUltimas(); },
+    config(c){ cfg = Object.assign({}, CFG_PADRAO, c || {}); idxReg = null; mostraModo(); if (!$("t-cad").hidden) { if (!$("p-aju").hidden || !$("p-cra").hidden) mostraAjustes(); if (!$("p-ati").hidden && !atiEditando) renderAtividades(); } if (!$("t-rel").hidden && !$("p-pai").hidden && !C.aberta) renderPainel(); renderUltimas(); },
     versoes(va, vf){ if (va) P.va = va; if (vf) P.vf = vf; },
-    _P: P, _cfg: () => cfg, _camLigada: () => !!cam, _svgBarra: svgBarra, _svgQR: svgQR, _htmlCrachas: htmlCrachas, _htmlBilhetes: htmlBilhetes, _htmlAutorizacoes: htmlAutorizacoes, _selecionados: selecionados
+    _P: P, _C: C, _BDC: BDC, _cfg: () => cfg, _camLigada: () => !!cam, _svgBarra: svgBarra, _svgQR: svgQR, _htmlCrachas: htmlCrachas, _htmlBilhetes: htmlBilhetes, _htmlAutorizacoes: htmlAutorizacoes, _selecionados: selecionados
   };
 })();
 
@@ -4087,13 +4513,14 @@ if (MODO_LOCAL) $("cardBackup").hidden = false;
 $("baixarBackup").addEventListener("click", async () => {
   const {regs: r, al, hi} = localCarrega();
   const ex = await PORTAO.extrasDaCopia();
-  const json = JSON.stringify({app: "entrada-saida-29abril", versao: 4, geradoEm: new Date().toISOString(), regs: r, alunos: al, hist: hi, motivos: lsLer(LK.motivos, MOTIVOS_PADRAO), assin: lsLer(LK.assin, {}), config: lsLer(LK.config, {escola: ESCOLA_PADRAO}), pass: ex.pass, fotos: ex.fotos});
+  const json = JSON.stringify({app: "entrada-saida-29abril", versao: 4, geradoEm: new Date().toISOString(), regs: r, alunos: al, hist: hi, motivos: lsLer(LK.motivos, MOTIVOS_PADRAO), assin: lsLer(LK.assin, {}), config: lsLer(LK.config, {escola: ESCOLA_PADRAO}), pass: ex.pass, fotos: ex.fotos, cham: ex.cham});
   const url = URL.createObjectURL(new Blob([json], {type: "application/json"}));
   const a = document.createElement("a");
   a.href = url; a.download = `copia-entrada-saida-${hojeISO()}.json`;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
-  mostra($("msgBackup"), `Cópia baixada: ${r.length} registro(s), ${ex.pass.length} leitura(s) do portão, ${ex.fotos.length} foto(s), ${hi.length} alteração(ões).`, 6000);
+  mostra($("msgBackup"), `Cópia baixada: ${r.length} registro(s), ${ex.pass.length} leitura(s) do portão, ${ex.cham.length} marca(s) de chamada, ${ex.fotos.length} foto(s), ${hi.length} alteração(ões).`, 6000);
+  anotaCopia();
 });
 $("escolherBackup").addEventListener("click", () => $("arquivoBackup").click());
 $("arquivoBackup").addEventListener("change", e => {
@@ -4129,7 +4556,7 @@ $("zerarDados").addEventListener("click", () => {
 $("confirmarBackup").addEventListener("click", () => {
   if (!copiaPendente) return;
   const c = copiaPendente, leve = Object.assign({}, c);
-  delete leve.pass; delete leve.fotos;
+  delete leve.pass; delete leve.fotos; delete leve.cham;
   chama("restaurarCopia", [leve], () => {
     copiaPendente = null;
     $("confirmarBackup").hidden = true;
@@ -4137,6 +4564,48 @@ $("confirmarBackup").addEventListener("click", () => {
       .catch(err => mostra($("erroBackup"), "Os registros voltaram, mas as leituras e fotos não. " + msgErro(err)));
   }, err => mostra($("erroBackup"), "Não foi possível restaurar. " + msgErro(err)));
 });
+
+// ---------- lembrete da cópia de segurança (modo local) ----------
+// No modo local tudo fica só neste aparelho. Quando há registros novos e a última cópia ficou velha, o app lembra com carinho.
+const DIA_MS = 86400000, COPIA_1A = 2, COPIA_DEPOIS = 7;     // dias: primeira cópia · entre uma cópia e outra
+function leCopia(){ const c = lsLer(LK.copia, null); return c && typeof c === "object" && !Array.isArray(c) ? c : {}; }
+function gravaCopia(c){ try { lsGravar(LK.copia, c); } catch (e) {} }
+const assinaDados = n => [regs.length, hist.length, n.pass, n.cham].join("|");
+let lembreteFixo = 0;
+function confereCopia(){
+  if (!MODO_LOCAL || !carregado || Date.now() < lembreteFixo) return;
+  PORTAO.contaDados().then(n => {
+    const c = leCopia(), agora = Date.now(), total = regs.length + hist.length + n.pass + n.cham, el = $("lembreteCopia");
+    const quando = t => new Date(t).toLocaleDateString("pt-BR") + " às " + new Date(t).toLocaleTimeString("pt-BR", {hour: "2-digit", minute: "2-digit"});
+    $("ultimaCopia").textContent = c.ts ? "Última cópia baixada neste aparelho: " + quando(c.ts) + "." : total ? "Ainda não foi baixada nenhuma cópia neste aparelho." : "";
+    if (!total) { el.hidden = true; return; }
+    if (!c.ini) { c.ini = agora; gravaCopia(c); }
+    const dias = Math.floor((agora - (c.ts || c.ini)) / DIA_MS);
+    const precisa = c.assin !== assinaDados(n) && dias >= (c.ts ? COPIA_DEPOIS : COPIA_1A) && agora >= (c.adia || 0);
+    el.hidden = !precisa;
+    if (!precisa) return;
+    $("lembreteBts").hidden = false;
+    $("lembreteTxt").innerHTML = c.ts
+      ? `<strong>Cópia de segurança:</strong> a última foi há ${dias} dias, e os registros novos estão só neste aparelho. Que tal baixar uma cópia agora?`
+      : `<strong>Cópia de segurança:</strong> os registros estão guardados só neste aparelho. Que tal baixar uma cópia agora, para ficar tranquilo?`;
+  }).catch(() => {});
+}
+/** Depois de baixar a cópia: anota a data e o que já está guardado nela. */
+function anotaCopia(){
+  return PORTAO.contaDados().then(n => {
+    const c = leCopia(); c.ts = Date.now(); c.assin = assinaDados(n); c.adia = 0; if (!c.ini) c.ini = c.ts;
+    gravaCopia(c);
+    if (!$("lembreteCopia").hidden) {          // veio pelo lembrete: confirma ali mesmo e some sozinho
+      $("lembreteBts").hidden = true;
+      $("lembreteTxt").innerHTML = "<strong>✓ Cópia baixada.</strong> Guarde o arquivo também fora deste aparelho (Drive da escola ou pendrive).";
+      lembreteFixo = Date.now() + 9000;
+      setTimeout(() => { lembreteFixo = 0; confereCopia(); }, 9000);
+    } else confereCopia();
+  }).catch(() => {});
+}
+$("lembreteBaixar").addEventListener("click", () => $("baixarBackup").click());
+$("lembreteDepois").addEventListener("click", () => { const c = leCopia(); c.adia = Date.now() + DIA_MS; gravaCopia(c); $("lembreteCopia").hidden = true; });
+document.addEventListener("visibilitychange", () => { if (!document.hidden) confereCopia(); });
 
 carregar(false);
 // app instalável: funciona sem internet e guarda os dados com prioridade neste aparelho

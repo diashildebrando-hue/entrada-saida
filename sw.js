@@ -1,5 +1,5 @@
 // Guarda o app no aparelho para abrir sem internet. Com internet, busca sempre a versão mais nova.
-const CACHE = "registro-entrada-saida-v7";
+const CACHE = "registro-entrada-saida-v8";
 // As fotos (fotos.bin, arquivo grande) não entram aqui: depois da senha elas ficam guardadas no próprio aparelho.
 const ARQUIVOS = ["./", "./index.html", "./manifest.webmanifest", "./icone-192.png", "./icone-512.png", "./dados.bin", "./versao.json",
   "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"];
