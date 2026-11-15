@@ -1506,7 +1506,9 @@ function fichaHTML(a, escolher){
   if (a.tel) l.push(`<div><span class="rot">Celular do responsável:</span> ${num(a.tel, "")}</div>`);
   if (outros.length) l.push(`<div><span class="rot">Outros telefones:</span> ${outros.join(escolher ? "" : ", ")}</div>`);
   if (a.telAluno) l.push(`<div><span class="rot">Celular do aluno:</span> ${num(a.telAluno, escolher ? "aluno" : "")}</div>`);
-  if (a.email) l.push(`<div><span class="rot">E-mail:</span> <a href="mailto:${esc(a.email)}">${esc(a.email)}</a></div>`);
+  // e-mail: sempre o do responsável (o e-mail @escola é do aluno e não aparece aqui)
+  l.push(a.emailResp ? `<div><span class="rot">E-mail do responsável:</span> <a href="mailto:${esc(a.emailResp)}">${esc(a.emailResp)}</a></div>`
+    : `<div><span class="rot">E-mail do responsável:</span> <span class="muted">não cadastrado</span></div>`);
   if (escolher && (outros.length || a.telAluno)) l.push(`<div class="dica" style="margin:0">Toque num número para usar no WhatsApp (ele fica como principal).</div>`);
   return l.join("");
 }
