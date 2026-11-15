@@ -1,5 +1,5 @@
 // Guarda o app no aparelho para abrir sem internet. Com internet, busca sempre a versão mais nova.
-const CACHE = "registro-entrada-saida-v4";
+const CACHE = "registro-entrada-saida-v5";
 const ARQUIVOS = ["./", "./index.html", "./manifest.webmanifest", "./icone-192.png", "./icone-512.png", "./dados.bin", "./fotos.bin",
   "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"];
 self.addEventListener("install", e => {
