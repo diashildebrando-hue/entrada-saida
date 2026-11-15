@@ -1,6 +1,6 @@
 // Guarda o app no aparelho para abrir sem internet. Com internet, busca sempre a versão mais nova.
-const CACHE = "registro-entrada-saida-v1";
-const ARQUIVOS = ["./", "./index.html", "./manifest.webmanifest", "./icone-192.png", "./icone-512.png",
+const CACHE = "registro-entrada-saida-v2";
+const ARQUIVOS = ["./", "./index.html", "./manifest.webmanifest", "./icone-192.png", "./icone-512.png", "./dados.bin", "./fotos.bin",
   "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => Promise.all(ARQUIVOS.map(u => c.add(u).catch(() => {})))).then(() => self.skipWaiting()));

@@ -337,6 +337,17 @@ body.cheia #pInfo,body.cheia #pTipo{font-size:clamp(18px,3vw,30px)}
 </header>
 
 <main>
+  <!-- LISTA DA ESCOLA PROTEGIDA POR SENHA (só na versão do endereço https) -->
+  <div class="card noprint" id="cardCofre" hidden style="margin-bottom:16px;border-color:#1e3a8a">
+    <h2>Carregar a lista de alunos da escola</h2>
+    <p class="muted" style="margin:0 0 8px">A lista (alunos, CGM, contatos e fotos) está neste endereço <strong>protegida por senha</strong>. Digite a senha uma vez: a lista fica guardada neste aparelho e funciona até sem internet.</p>
+    <div class="inline">
+      <input id="cofreSenha" type="password" autocomplete="current-password" placeholder="Senha da lista">
+      <button type="button" class="btn" id="cofreAbrir">Carregar</button>
+    </div>
+    <div class="msg" id="cofreMsg"></div>
+    <div class="erro" id="cofreErro"></div>
+  </div>
   <!-- REGISTRAR -->
   <section class="pane" id="t-reg">
     <div class="card" id="cardForm">
@@ -1086,6 +1097,7 @@ function aplicaDados(d){
   usuario = (d && d.usuario) || usuario;
   if (d && Array.isArray(d.motivos)) { motivos = d.motivos; preencheMotivos(); }
   carregado = true;
+  if (typeof COFRE !== "undefined" && COFRE) COFRE.verifica();
   $("boasVindas").hidden = TURMAS.length > 0;
   atualizaListaAlunos(true);
   if (!telEditado) preencheTel();
@@ -3186,6 +3198,14 @@ const PORTAO = (() => {
     for (let i = 0; i < pass.length; i += 400) { await manda("registrarPassagens", pass.slice(i, i + 400)); progresso && progresso(`Leituras: ${Math.min(i + 400, pass.length)} de ${pass.length}`); }
     for (let i = 0; i < fotos.length; i += 5) { await manda("salvarFotos", fotos.slice(i, i + 5)); progresso && progresso(`Fotos: ${Math.min(i + 5, fotos.length)} de ${fotos.length}`); }
   }
+  /** Fotos vindas da lista protegida: [{cod, img, ts}] */
+  async function restauraFotos(lista){
+    const ok = (lista || []).filter(f => f && f.cod && f.img);
+    await BD.putMuitos("fotos", ok);
+    ok.forEach(f => { P.fts[String(f.cod)] = f.ts || 1; P.fcache.delete(String(f.cod)); });
+    gravaFts();
+    renderFotos();
+  }
   async function zera(){
     await BD.limpa("pass"); await BD.limpa("fila"); await BD.limpa("fotos");
     P.fts = {}; P.fpend = []; P.fcache.clear(); P.hoje = []; P.fila = []; P.srv = new Map();
@@ -3240,13 +3260,69 @@ const PORTAO = (() => {
   setInterval(() => { viraDia(); if (!MODO_LOCAL && P.fila.length) envia(); }, 30000);
 
   return {
-    estado, aplicaPass, sincFotos, indexa, aoMostrar, aoSair, excluiPassagem, extrasDaCopia, restauraExtras, zera, leu,
+    estado, aplicaPass, sincFotos, restauraFotos, indexa, aoMostrar, aoSair, excluiPassagem, extrasDaCopia, restauraExtras, zera, leu,
     config(c){ cfg = Object.assign({}, CFG_PADRAO, c || {}); if (!$("t-por").hidden) mostraAjustes(); else mostraModo(); },
     versoes(va, vf){ if (va) P.va = va; if (vf) P.vf = vf; },
     _P: P, _svgBarra: svgBarra, _svgQR: svgQR, _htmlCrachas: htmlCrachas, _htmlBilhetes: htmlBilhetes, _htmlAutorizacoes: htmlAutorizacoes, _selecionados: selecionados
   };
 })();
 
+// ---------- lista da escola protegida por senha (endereço https público: o arquivo dados.bin só abre com a senha) ----------
+var COFRE = (() => {
+  const b64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+  let pacote = null;
+  async function busca(nome){
+    const r = await fetch(nome, {cache: "no-cache"});
+    if (!r.ok) throw new Error("Não encontrei a lista neste endereço.");
+    return r.json();
+  }
+  async function chaveDe(senha, p){
+    const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(senha), "PBKDF2", false, ["deriveKey"]);
+    return crypto.subtle.deriveKey({name: "PBKDF2", salt: b64(p.salt), iterations: p.iter, hash: "SHA-256"}, base, {name: "AES-GCM", length: 256}, false, ["decrypt"]);
+  }
+  async function abre(p, k){
+    const bruto = await crypto.subtle.decrypt({name: "AES-GCM", iv: b64(p.iv)}, k, b64(p.ct));
+    return JSON.parse(new TextDecoder().decode(bruto));
+  }
+  function temAlunos(){ return Object.values(alunos || {}).some(l => l && l.length); }
+  function verifica(){
+    if (!window.crypto || !crypto.subtle || location.protocol === "file:") return;
+    const versaoGuardada = lsLer(LK.regs.replace(/regs$/, "cofre_versao"), "");
+    if (temAlunos() && versaoGuardada) { $("cardCofre").hidden = true; return; }
+    busca("dados.bin").then(p => { pacote = p; $("cardCofre").hidden = temAlunos() && versaoGuardada === p.versao; }).catch(() => {});
+  }
+  $("cofreSenha").addEventListener("keydown", e => { if (e.key === "Enter") $("cofreAbrir").click(); });
+  $("cofreAbrir").addEventListener("click", async () => {
+    $("cofreErro").style.display = "none";
+    const senha = $("cofreSenha").value.trim().toLowerCase();
+    if (!senha) { mostra($("cofreErro"), "Digite a senha."); return; }
+    $("cofreAbrir").disabled = true;
+    try {
+      const p = pacote || (pacote = await busca("dados.bin"));
+      const k = await chaveDe(senha, p);
+      let d;
+      try { d = await abre(p, k); } catch (e) { throw new Error("Senha incorreta. Confira e tente de novo."); }
+      const porTurma = {};
+      Object.keys(d.roster).forEach(t => porTurma[t] = d.roster[t].map(alunoDeLinha));
+      await new Promise((ok, falha) => chama("importarAlunos", [porTurma], ok, falha));
+      lsGravar(LK.regs.replace(/regs$/, "cofre_versao"), p.versao);
+      $("cofreSenha").value = "";
+      const n = Object.values(porTurma).reduce((s, l) => s + l.length, 0);
+      mostra($("cofreMsg"), `Lista carregada: ${n} alunos. Agora as fotos…`);
+      // fotos (arquivo separado, também protegido pela mesma senha)
+      try {
+        const pf = await busca("fotos.bin");
+        const kf = pf.salt === p.salt && pf.iter === p.iter ? k : await chaveDe(senha, pf);
+        const fotos = await abre(pf, kf);
+        await PORTAO.restauraFotos(fotos);
+        mostra($("cofreMsg"), `Pronto: ${n} alunos e ${fotos.length} fotos guardados neste aparelho.`, 8000);
+      } catch (e) { mostra($("cofreMsg"), `Pronto: ${n} alunos guardados neste aparelho. (As fotos não vieram: ${msgErro(e)})`, 10000); }
+      setTimeout(() => { $("cardCofre").hidden = true; }, 8000);
+    } catch (e) { mostra($("cofreErro"), msgErro(e)); }
+    $("cofreAbrir").disabled = false;
+  });
+  return {verifica};
+})();
 // ---------- navegação ----------
 document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => mostraAba(b.dataset.tab)));
 

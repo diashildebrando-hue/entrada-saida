@@ -4,4 +4,4 @@ App de registro de entrada e saída de estudantes, com leitura de crachá no por
 
 - Abra no celular: https://diashildebrando-hue.github.io/entrada-saida/
 - No Android, use o menu do navegador → **Instalar app** / **Adicionar à tela inicial**.
-- Este arquivo **não contém dados de alunos**. A lista (planilha do SERE) e as fotos são importadas em cada aparelho e ficam guardadas só nele.
+- A lista de alunos e as fotos ficam em `dados.bin` e `fotos.bin`, **cifradas** (AES-256, chave derivada de senha). Sem a senha, os arquivos não mostram nada. Depois de digitar a senha, os dados ficam guardados só naquele aparelho.
