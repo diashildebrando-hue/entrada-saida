@@ -530,6 +530,16 @@ tr.cor .muted,table.resp tr.cor td::before{color:#4b5563}
 .lembrete .lbBts{display:flex;gap:8px;flex-wrap:wrap}
 .lembrete .btn{margin:0;width:auto;padding:8px 12px;font-size:14px;min-height:40px;background:#fff;border:1px solid #c2560c;color:#7c2d12}
 .lembrete .btn.lbP{background:#c2560c;color:#fff;font-weight:600}
+
+/* ===== enviar/reenviar avisos (Presença) ===== */
+.envBox{border-top:1px solid var(--borda,#e5e7eb);margin-top:14px;padding-top:4px}
+.envBox[hidden],.envFila[hidden]{display:none}
+.envBox .acoes .btn{flex:1 1 200px}
+.envFila{background:#f0f9ff;border:1px solid #1579ad;border-radius:12px;padding:10px 12px;margin-top:10px}
+.envFila p{margin:0 0 8px}
+.envBts{display:inline-flex;gap:6px;flex-wrap:wrap}
+.btn.sm.tg{background:#1579ad;border-color:#1579ad;color:#fff;text-decoration:none;display:inline-flex;align-items:center}
+.envFila .btn{text-decoration:none}
 </style>
 </head>
 <body>
@@ -811,6 +821,28 @@ tr.cor .muted,table.resp tr.cor td::before{color:#4b5563}
       <div class="acoes noprint">
         <button type="button" class="btn" id="preCsv">Exportar esta lista (CSV)</button>
         <button type="button" class="btn" id="preImprimir">Imprimir / salvar PDF</button>
+      </div>
+      <div class="envBox noprint" id="envBox">
+        <h3 class="sub">Enviar ou reenviar avisos às famílias</h3>
+        <p class="dica" id="envResumo"></p>
+        <div class="filtros" style="grid-template-columns:repeat(auto-fit,minmax(180px,1fr))">
+          <div><label for="envPor">Por quê</label><select id="envPor">
+            <option value="resumo">Resumo do dia</option><option value="reenvio">Reenviar (alguém não recebeu)</option><option value="correcao">Correção de um registro</option></select></div>
+        </div>
+        <div class="acoes">
+          <button type="button" class="btn tg" id="envTg">Enviar pelo Telegram</button>
+          <button type="button" class="btn waS" id="envWa">Enviar pelo WhatsApp</button>
+        </div>
+        <div class="msg" id="envMsg"></div>
+        <div class="erro" id="envErro"></div>
+        <div class="envFila" id="envFila" hidden>
+          <p id="envFilaTxt"></p>
+          <div class="acoes">
+            <a class="btn" id="envAbrir" target="_blank" rel="noopener" href="#">Abrir</a>
+            <button type="button" class="btn" id="envPular">Pular</button>
+            <button type="button" class="btn" id="envParar">Parar</button>
+          </div>
+        </div>
       </div>
       <h3 class="sub noprint">Todas as leituras de um período</h3>
       <div class="filtros noprint" style="grid-template-columns:repeat(3,minmax(0,1fr))">
@@ -3708,10 +3740,8 @@ const PORTAO = (() => {
       ({id: l[0], data: l[1], hora: l[2], cod: l[3], turma: l[4], tipo: l[5], via: l[6] || "", motivo: l[7] || "", nome: (r.nomes || {})[l[3]] || ""}))), rej));
   }
   function enviados(){ if (pref.envDia !== hojeISO()) { pref.envDia = hojeISO(); pref.env = []; } return pref.env; }
-  function linkAviso(x, dia){
-    const tel = x.a.tel;
-    if (!tel) return "";
-    let d = soDigitos(tel); if (d.length === 10 || d.length === 11) d = "55" + d;
+  /** Texto do aviso do dia para a família (o mesmo no Telegram e no WhatsApp). por: resumo | reenvio | correcao */
+  function textoAviso(x, dia, por){
     const ola = x.a.resp ? `Olá, ${primeiroNome(x.a.resp)}!` : "Olá!";
     const deQuem = escola ? (/^(escola|e\.?\s?e\.?\s|unidade)/i.test(escola) ? "da " : "do ") + escola : "da escola";
     const quando = dia === hojeISO() ? "hoje (" + fmtData(dia).slice(0, 5) + ")" : "em " + fmtData(dia);
@@ -3720,8 +3750,19 @@ const PORTAO = (() => {
       `Queremos saber se está tudo bem. Você pode nos contar o motivo? Agradecemos o retorno.`;
     else msg = `${ola} Aqui é ${deQuem}. Informamos que ${x.a.nome}, do ${x.turma}, ` +
       (x.ent ? `entrou no colégio às ${x.ent}` : "") + (x.ent && x.sai ? " e " : "") + (x.sai ? `saiu às ${x.sai}` : "") + `, ${quando}. Qualquer dúvida, estamos à disposição.`;
-    return `https://wa.me/${d}?text=${encodeURIComponent(msg)}`;
+    if (por === "correcao") msg = msg.replace(/^(Olá[^!]*! )/, "$1Corrigimos um registro e enviamos a informação certa. ");
+    return msg;
   }
+  function linkAviso(x, dia, por){
+    const tel = x.a.tel;
+    if (!tel) return "";
+    let d = soDigitos(tel); if (d.length === 10 || d.length === 11) d = "55" + d;
+    return `https://wa.me/${d}?text=${encodeURIComponent(textoAviso(x, dia, por))}`;
+  }
+  /** Telegram sem o robô: abre o Telegram com a mensagem pronta; a pessoa escolhe a conversa da família. */
+  const linkTgAviso = (x, dia, por) => `https://t.me/share/url?url=${encodeURIComponent(" ")}&text=${encodeURIComponent(textoAviso(x, dia, por))}`;
+  /** O robô da escola manda sozinho para esta família? (versão Google, robô ligado, família ligada pelo QR do bilhete) */
+  const roboManda = x => !MODO_LOCAL && !!cfg.tgUser && !!x.a.tg;
   /** Leituras de um período (o dia de hoje vem da memória, que tem também o que ainda não subiu).
       A consulta de dias passados fica lembrada por um tempo, para o relatório não buscar tudo de novo a cada atualização. */
   let memPer = {k: "", quando: 0, ver: -1, v: null};
@@ -3779,8 +3820,8 @@ const PORTAO = (() => {
         <div><strong>${entrou}</strong><span>${umDia ? "com registro no dia" : "presenças registradas"}</span></div>
         <div class="nso"><strong>${so}</strong><span>falta entrada ou saída</span></div>
         <div class="nfora"><strong>${fora}</strong><span>fora do horário / atividade</span></div>`;
-      $("preDica").textContent = (cfg.tgUser ? `Famílias com ✓ recebem o aviso automático pelo Telegram. ` : "") +
-        "O botão WhatsApp abre a conversa com a mensagem pronta; é só tocar em enviar." + (dias.length < diasEntre(di, df).length ? " Dias sem nenhuma leitura (fim de semana, feriado) não aparecem." : "");
+      $("preDica").textContent = (!MODO_LOCAL && cfg.tgUser ? `Famílias com ✓ recebem os avisos automáticos pelo Telegram. ` : "") +
+        "Telegram e WhatsApp: o aviso já vai escrito. Para mandar para várias famílias de uma vez, use \"Enviar ou reenviar avisos\", abaixo da lista." + (dias.length < diasEntre(di, df).length ? " Dias sem nenhuma leitura (fim de semana, feriado) não aparecem." : "");
       preDados = daTurma;
       preLista = base.filter(x => ver === "todos" || (ver === "nao" && !x.L.length) || (ver === "sim" && x.L.length) ||
         (ver === "semsaida" && x.so) || (ver === "fora" && x.fora) || (ver === "ativ" && (x.agenda.length || x.ativ.length)));
@@ -3790,6 +3831,7 @@ const PORTAO = (() => {
         " · " + (umDia ? fmtData(di) : fmtData(di) + " a " + fmtData(df)) + " · " + (t || "todas as turmas") + (tn ? " · " + tn : "") +
         (tipoRel === "lista" ? " · " + $("preVer").selectedOptions[0].textContent.toLowerCase() : "");
       $("preDica").hidden = tipoRel !== "lista";
+      $("envBox").hidden = tipoRel !== "lista"; preUmDia = umDia; resumoEnvio();
       $("preResumoBox").hidden = tipoRel === "lista"; $("preListaBox").hidden = tipoRel !== "lista";
       $("preVer").disabled = tipoRel !== "lista";
       if (tipoRel !== "lista") {
@@ -3818,11 +3860,13 @@ const PORTAO = (() => {
       const mostrar = preTudo ? preLista : preLista.slice(0, LIMITE_LINHAS);
       const env = new Set(enviados());
       $("preCorpo").innerHTML = mostrar.length ? mostrar.map(x => {
-        const link = linkAviso(x, x.dia), k = x.dia + "|" + x.a.cod;
+        const link = linkAviso(x, x.dia), k = x.dia + "|" + x.a.cod, kt = k + "|tg";
+        const tg = roboManda(x) ? `<button type="button" class="btn sm tg" data-tgrobo="${esc(k)}">${env.has(kt) ? "Telegram ✓" : "Telegram"}</button>`
+          : `<a class="btn sm tg" target="_blank" rel="noopener" data-env="${esc(kt)}" href="${esc(linkTgAviso(x, x.dia))}">${env.has(kt) ? "Telegram ✓" : "Telegram"}</a>`;
         return `<tr class="cor ${x.cls}${x.so ? " so" : ""}"><td>${esc(fmtData(x.dia).slice(0, 5))}</td><td>${esc(x.turma)}</td>
           <td>${esc(x.a.nome)}${x.a.tg ? ' <span title="Recebe pelo Telegram">✓</span>' : ""}</td>
           <td>${esc(x.ent || "—")}</td><td>${esc(x.sai || "—")}</td><td>${esc(x.sit)}</td>
-          <td class="noprint">${link ? `<a class="btn sm wa" target="_blank" rel="noopener" data-env="${esc(k)}" href="${esc(link)}">${env.has(k) ? "Enviado ✓" : "WhatsApp"}</a>` : '<span class="muted">sem telefone</span>'}</td></tr>`;
+          <td class="noprint"><span class="envBts">${tg}${link ? `<a class="btn sm wa" target="_blank" rel="noopener" data-env="${esc(k)}" href="${esc(link)}">${env.has(k) ? "WhatsApp ✓" : "WhatsApp"}</a>` : '<span class="muted">sem telefone</span>'}</span></td></tr>`;
       }).join("") : '<tr><td colspan="7" class="muted">Ninguém nesta lista.</td></tr>';
       $("preMais").hidden = preTudo || preLista.length <= LIMITE_LINHAS;
       $("preMais").textContent = `Mostrar todos (${preLista.length})`;
@@ -3830,12 +3874,91 @@ const PORTAO = (() => {
   }
   ["preTipo", "preDia", "preFim", "preTurma", "preTurno", "preVer"].forEach(id => $(id).addEventListener("change", () => { preTudo = false; renderPresenca(); }));
   $("preMais").addEventListener("click", () => { preTudo = true; renderPresenca(); });
+  const marcaEnviado = k => { const env = enviados(); if (!env.includes(k)) env.push(k); gravaPref(); };
   $("preCorpo").addEventListener("click", e => {
+    const r = e.target.closest("button[data-tgrobo]");
+    if (r) {
+      const x = preLista.find(y => y.dia + "|" + y.a.cod === r.dataset.tgrobo);
+      if (!x) return;
+      r.disabled = true; r.textContent = "Enviando…";
+      enviaPeloRobo([x], "reenvio").then(res => { r.disabled = false; r.textContent = res.enviados ? "Telegram ✓" : "Telegram"; if (res.enviados) marcaEnviado(r.dataset.tgrobo + "|tg");
+        mostra(res.enviados ? $("envMsg") : $("envErro"), res.enviados ? `Aviso de ${x.a.nome} enviado pelo Telegram.` : `Não foi possível enviar para a família de ${x.a.nome} pelo Telegram. Tente o WhatsApp.`, 6000); },
+        err => { r.disabled = false; r.textContent = "Telegram"; mostra($("envErro"), "Não foi possível enviar. " + msgErro(err), 8000); });
+      return;
+    }
     const a = e.target.closest("a[data-env]");
     if (!a) return;
-    const env = enviados();
-    if (!env.includes(a.dataset.env)) env.push(a.dataset.env);
-    gravaPref(); a.textContent = "Enviado ✓";
+    marcaEnviado(a.dataset.env);
+    a.textContent = a.classList.contains("tg") ? "Telegram ✓" : "WhatsApp ✓";
+  });
+
+  // ---------- enviar ou reenviar avisos para várias famílias (a lista que está na tela) ----------
+  let preUmDia = true, envPend = 0, filaEnv = null;
+  const nomeTurmaSel = () => $("preTurma").value || "todas as turmas";
+  function resumoEnvio(){
+    if (!preUmDia) { $("envResumo").textContent = "Para enviar avisos, escolha um dia só (Início e Fim no mesmo dia)."; $("envTg").disabled = $("envWa").disabled = true; return; }
+    const n = preLista.length, robo = preLista.filter(roboManda).length;
+    $("envTg").disabled = $("envWa").disabled = !n;
+    $("envResumo").textContent = !n ? "Ninguém na lista acima." :
+      `Vai para as famílias da lista acima: ${n} estudante(s) · ${nomeTurmaSel()} · ${$("preVer").selectedOptions[0].textContent.toLowerCase()} · ${fmtData($("preDia").value || P.dia)}. ` +
+      (!MODO_LOCAL && cfg.tgUser ? `${robo} recebem pelo robô do Telegram (sai sozinho); as outras abrem uma por uma.` : "Abre uma família por vez, com a mensagem pronta; é só tocar em enviar.");
+  }
+  function enviaPeloRobo(lista, por){
+    const itens = lista.map(x => ({cod: String(x.a.cod), texto: textoAviso(x, x.dia, por)}));
+    return new Promise((res, rej) => pede("reenviarAvisos", [{itens, dia: lista[0] ? lista[0].dia : "", turma: nomeTurmaSel(), motivo: $("envPor").selectedOptions[0].textContent}], res, rej));
+  }
+  /** Fila guiada: uma família por toque (o navegador não deixa abrir muitas conversas de uma vez). */
+  function iniciaFila(lista, canal){
+    const por = $("envPor").value;
+    const itens = lista.map(x => ({x, link: canal === "wa" ? linkAviso(x, x.dia, por) : linkTgAviso(x, x.dia, por)})).filter(i => i.link);
+    const sem = lista.length - itens.length;
+    if (!itens.length) { mostra($("envErro"), "Nenhuma dessas famílias tem telefone cadastrado.", 6000); return; }
+    filaEnv = {itens, i: 0, canal, sem};
+    $("envFila").hidden = false; mostraFila();
+    $("envFila").scrollIntoView({block: "nearest"});
+  }
+  function mostraFila(){
+    const f = filaEnv;
+    if (!f || f.i >= f.itens.length) {
+      if (f) mostra($("envMsg"), `Pronto: ${f.itens.length} família(s) na fila do ${f.canal === "wa" ? "WhatsApp" : "Telegram"}.` + (f.sem ? ` ${f.sem} sem telefone cadastrado.` : ""), 8000);
+      filaEnv = null; $("envFila").hidden = true; renderPresenca(); return;
+    }
+    const it = f.itens[f.i];
+    $("envFilaTxt").innerHTML = `<strong>${f.i + 1} de ${f.itens.length}</strong> · ${esc(it.x.a.nome)} (${esc(it.x.turma)})` +
+      (f.canal === "tg" ? '<br><span class="muted">O Telegram abre com a mensagem pronta: escolha a conversa da família e toque em enviar.</span>' : "");
+    $("envAbrir").href = it.link;
+    $("envAbrir").className = "btn " + (f.canal === "wa" ? "waS" : "tg");
+    $("envAbrir").textContent = f.canal === "wa" ? "Abrir WhatsApp" : "Abrir Telegram";
+  }
+  $("envAbrir").addEventListener("click", () => {
+    const f = filaEnv; if (!f) return;
+    const it = f.itens[f.i];
+    marcaEnviado(it.x.dia + "|" + it.x.a.cod + (f.canal === "tg" ? "|tg" : ""));
+    setTimeout(() => { f.i++; mostraFila(); }, 300);
+  });
+  $("envPular").addEventListener("click", () => { if (filaEnv) { filaEnv.i++; mostraFila(); } });
+  $("envParar").addEventListener("click", () => { filaEnv = null; $("envFila").hidden = true; renderPresenca(); });
+  $("envWa").addEventListener("click", () => iniciaFila(preLista.slice(), "wa"));
+  $("envTg").addEventListener("click", () => {
+    const lista = preLista.slice();
+    if (!lista.length) return;
+    const robo = lista.filter(roboManda), outros = lista.filter(x => !roboManda(x));
+    if (!robo.length) { iniciaFila(outros, "tg"); return; }
+    if (Date.now() > envPend) {          // confirma antes de mandar para muitas famílias de uma vez
+      envPend = Date.now() + 6000;
+      $("envTg").textContent = `Confirmar: enviar para ${robo.length} família(s)?`;
+      setTimeout(() => { if (Date.now() >= envPend) $("envTg").textContent = "Enviar pelo Telegram"; }, 6100);
+      return;
+    }
+    envPend = 0; $("envTg").textContent = "Enviando…"; $("envTg").disabled = true;
+    enviaPeloRobo(robo, $("envPor").value).then(res => {
+      $("envTg").textContent = "Enviar pelo Telegram"; $("envTg").disabled = false;
+      robo.forEach(x => { if (!res.semTelegram.includes(String(x.a.cod))) marcaEnviado(x.dia + "|" + x.a.cod + "|tg"); });
+      const faltam = outros.concat(robo.filter(x => res.semTelegram.includes(String(x.a.cod))));
+      mostra($("envMsg"), `Telegram: ${res.enviados} família(s) receberam.` + (res.falhas ? ` ${res.falhas} não receberam (tente o WhatsApp).` : "") +
+        (faltam.length ? ` ${faltam.length} não têm Telegram ligado: abrindo a fila do WhatsApp para elas.` : ""), 10000);
+      if (faltam.length) iniciaFila(faltam, "wa"); else renderPresenca();
+    }, err => { $("envTg").textContent = "Enviar pelo Telegram"; $("envTg").disabled = false; mostra($("envErro"), "Não foi possível enviar pelo Telegram. " + msgErro(err), 10000); });
   });
   let preResumo = null;
   $("preCsv").addEventListener("click", () => {
