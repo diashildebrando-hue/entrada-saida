@@ -1,0 +1,11 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Instalação</title>
+<meta name="robots" content="noindex"><style>body{font:16px system-ui;margin:24px;background:#fff;color:#111}button{font-size:18px;padding:14px 18px;margin:8px 0;width:100%}#m{margin-top:12px}</style></head><body>
+<h2>Instalação do app (uso único)</h2><button id="a">Copiar Code.gs</button><button id="b">Copiar Index.html</button><p id="m"></p>
+<script>
+async function copia(arq){const m=document.getElementById('m');try{if(!window.K)throw new Error('sem chave');
+const kb=new Uint8Array(K.match(/../g).map(h=>parseInt(h,16)));const key=await crypto.subtle.importKey('raw',kb,'AES-GCM',false,['decrypt']);
+const d=new Uint8Array(await (await fetch(arq+'?t='+Date.now(),{cache:'no-store'})).arrayBuffer());
+const t=new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:d.slice(0,12)},key,d.slice(12)));
+await navigator.clipboard.writeText(t);m.textContent='Copiado: '+arq+' ('+t.length+' caracteres)';}catch(e){m.textContent='Erro: '+e.message;}}
+a.onclick=()=>copia('a.bin');b.onclick=()=>copia('b.bin');
+</script></body></html>
